@@ -320,16 +320,7 @@ Resources:
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
           sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
-          #export DB_HOSTNAME=${WSO2EIDBInstance.Endpoint.Address}
-          #export DB_PORT=${WSO2EIDBInstance.Endpoint.Port}
-          #export DB_USERNAME=${DBUsername}
-          #DB_PASSWORD=${DBPassword}
-          #sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/provision_db_ei.sh
-          #sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/provision_db_ei.sh
-          #sed -i "s/CF_DB_HOST/${WSO2EIDBInstance.Endpoint.Address}/g" /usr/local/bin/provision_db_ei.sh
-          #sed -i "s/CF_DB_PORT/${WSO2EIDBInstance.Endpoint.Port}/g" /usr/local/bin/provision_db_ei.sh
           tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
-          #bash /usr/local/bin/provision_db_ei.sh
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
           /home/ubuntu/wso2ei-6.4.0/bin/integrator.sh start
@@ -417,16 +408,7 @@ Resources:
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
           sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
-          #export DB_HOSTNAME=${WSO2EIDBInstance.Endpoint.Address}
-          #export DB_PORT=${WSO2EIDBInstance.Endpoint.Port}
-          #export DB_USERNAME=${DBUsername}
-          #DB_PASSWORD=${DBPassword}
-          #sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/provision_db_ei.sh
-          #sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/provision_db_ei.sh
-          #sed -i "s/CF_DB_HOST/${WSO2EIDBInstance.Endpoint.Address}/g" /usr/local/bin/provision_db_ei.sh
-          #sed -i "s/CF_DB_PORT/${WSO2EIDBInstance.Endpoint.Port}/g" /usr/local/bin/provision_db_ei.sh
           tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
-          #bash /usr/local/bin/provision_db_ei.sh
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
           sleep 30
