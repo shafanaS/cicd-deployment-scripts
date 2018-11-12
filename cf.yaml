@@ -531,7 +531,7 @@ Resources:
   WSO2EILoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: EI
+      Name: EI-prod
       Scheme: internet-facing
       Subnets:
         - !Ref WSO2EIPublicSubnet1
@@ -549,7 +549,7 @@ Resources:
       HealthCheckPort: 9443
       Matcher:
         HttpCode: 200
-      Name: ei-carbon-9443
+      Name: ei-carbon-prod-9443
       Port: 9443
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -574,7 +574,7 @@ Resources:
       HealthCheckPort: 8280
       Matcher:
         HttpCode: 200
-      Name: ei-carbon-8280
+      Name: ei-carbon-prod-8280
       Port: 8280
       Protocol: HTTP
       TargetGroupAttributes:
@@ -599,7 +599,7 @@ Resources:
       HealthCheckPort: 8080
       Matcher:
         HttpCode: 200
-      Name: ei-carbon-8080
+      Name: ei-carbon-prod-8080
       Port: 8080
       Protocol: HTTP
       TargetGroupAttributes:
