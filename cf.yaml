@@ -172,7 +172,7 @@ Resources:
           FromPort: '3306'
           ToPort: '3306'
           CidrIp: 0.0.0.0/0
-  WSO2EIDBInstance:
+  WSO2EIDBSTAGINGInstance:
     Type: 'AWS::RDS::DBInstance'
     DeletionPolicy: Delete
     Properties:
@@ -181,7 +181,7 @@ Resources:
       DBInstanceClass: db.t2.medium
       AllocatedStorage: 5
       BackupRetentionPeriod: '0'
-      DBInstanceIdentifier: WSO2EIDBInstance
+      DBInstanceIdentifier: WSO2EIDBSTAGINGInstance
       DBName: WSO2_EI_DB
       Engine: MySQL
       MasterUsername: !Ref DBUsername
@@ -276,14 +276,14 @@ Resources:
           export PATH=~/.local/bin:$PATH
           apt-get update
           pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
-          export DB_HOSTNAME=${WSO2EIDBInstance.Endpoint.Address}
-          export DB_PORT=${WSO2EIDBInstance.Endpoint.Port}
+          export DB_HOSTNAME=${WSO2EIDBSTAGINGInstance.Endpoint.Address}
+          export DB_PORT=${WSO2EIDBSTAGINGInstance.Endpoint.Port}
           export DB_USERNAME=${DBUsername}
           export DB_PASSWORD=${DBPassword}
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/provision_db_ei.sh
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/provision_db_ei.sh
-          sed -i "s/CF_DB_HOST/${WSO2EIDBInstance.Endpoint.Address}/g" /usr/local/bin/provision_db_ei.sh
-          sed -i "s/CF_DB_PORT/${WSO2EIDBInstance.Endpoint.Port}/g" /usr/local/bin/provision_db_ei.sh
+          sed -i "s/CF_DB_HOST/${WSO2EIDBSTAGINGInstance.Endpoint.Address}/g" /usr/local/bin/provision_db_ei.sh
+          sed -i "s/CF_DB_PORT/${WSO2EIDBSTAGINGInstance.Endpoint.Port}/g" /usr/local/bin/provision_db_ei.sh
           bash /usr/local/bin/provision_db_ei.sh
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
@@ -318,7 +318,7 @@ Resources:
           sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/wso2ei-6.4.0/conf/carbon.xml
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
+          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBSTAGINGInstance.Endpoint.Address}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
           tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
@@ -339,7 +339,7 @@ Resources:
       - WSO2EISecurityGroup
       - WSO2EILoadBalancer
       - WSO2EIVPCInternetGatewayAttachment
-      - WSO2EIDBInstance
+      - WSO2EIDBSTAGINGInstance
       - WSO2BastionInstance
   WSO2EINode1AutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
@@ -406,12 +406,12 @@ Resources:
           sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/wso2ei-6.4.0/conf/carbon.xml
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
+          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBSTAGINGInstance.Endpoint.Address}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
           tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
-          sleep 30
+          sleep 60
           /home/ubuntu/wso2ei-6.4.0/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
@@ -428,7 +428,7 @@ Resources:
       - WSO2EISecurityGroup
       - WSO2EILoadBalancer
       - WSO2EIVPCInternetGatewayAttachment
-      - WSO2EIDBInstance
+      - WSO2EIDBSTAGINGInstance
       - WSO2BastionInstance
   WSO2EINode2AutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
@@ -531,7 +531,7 @@ Resources:
   WSO2EILoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: EI-prod
+      Name: EI
       Scheme: internet-facing
       Subnets:
         - !Ref WSO2EIPublicSubnet1
@@ -549,7 +549,7 @@ Resources:
       HealthCheckPort: 9443
       Matcher:
         HttpCode: 200
-      Name: ei-carbon-prod-9443
+      Name: ei-carbon-9443
       Port: 9443
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -574,7 +574,7 @@ Resources:
       HealthCheckPort: 8280
       Matcher:
         HttpCode: 200
-      Name: ei-carbon-prod-8280
+      Name: ei-carbon-8280
       Port: 8280
       Protocol: HTTP
       TargetGroupAttributes:
@@ -599,7 +599,7 @@ Resources:
       HealthCheckPort: 8080
       Matcher:
         HttpCode: 200
-      Name: ei-carbon-prod-8080
+      Name: ei-carbon-8080
       Port: 8080
       Protocol: HTTP
       TargetGroupAttributes:
@@ -732,4 +732,3 @@ Parameters:
   AMIid:
     Type: String
     Default: ami-0f749bc5d7a0d729a
-
