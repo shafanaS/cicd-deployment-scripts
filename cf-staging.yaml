@@ -411,7 +411,7 @@ Resources:
           tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
-          sleep 30
+          sleep 60
           /home/ubuntu/wso2ei-6.4.0/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
@@ -732,4 +732,3 @@ Parameters:
   AMIid:
     Type: String
     Default: ami-0f749bc5d7a0d729a
-
