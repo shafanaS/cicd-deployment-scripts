@@ -503,6 +503,11 @@ Resources:
         Value: '20'
       - Key: stickiness.enabled
         Value: 'true'
+      Targets:
+      - Id: !Ref WSO2EIInstance1
+        Port: 9443
+      - Id: !Ref WSO2EIInstance2
+        Port: 9443
       UnhealthyThresholdCount: 3
       VpcId:
         Ref: WSO2EIVPC
@@ -528,6 +533,11 @@ Resources:
         Value: '20'
       - Key: stickiness.enabled
         Value: 'true'
+      Targets:
+      - Id: !Ref WSO2EIInstance1
+        Port: 9443
+      - Id: !Ref WSO2EIInstance2
+        Port: 9443
       UnhealthyThresholdCount: 3
       VpcId:
         Ref: WSO2EIVPC
@@ -553,6 +563,11 @@ Resources:
         Value: '20'
       - Key: stickiness.enabled
         Value: 'true'
+      Targets:
+      - Id: !Ref WSO2EIInstance1
+        Port: 9443
+      - Id: !Ref WSO2EIInstance2
+        Port: 9443
       UnhealthyThresholdCount: 3
       VpcId:
         Ref: WSO2EIVPC
