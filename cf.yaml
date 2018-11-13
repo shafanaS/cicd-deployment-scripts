@@ -565,9 +565,9 @@ Resources:
         Value: 'true'
       Targets:
       - Id: !Ref WSO2EIInstance1
-        Port: 9443
+        Port: 8080
       - Id: !Ref WSO2EIInstance2
-        Port: 9443
+        Port: 8080
       UnhealthyThresholdCount: 3
       VpcId:
         Ref: WSO2EIVPC
