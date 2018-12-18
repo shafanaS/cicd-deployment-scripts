@@ -677,6 +677,7 @@ Parameters:
       - m3.xlarge
       - m3.2xlarge
       - m4.large
+      - m4.xlarge
     ConstraintDescription: Must be a valid EC2 instance type
   DBUsername:
     Type: String
