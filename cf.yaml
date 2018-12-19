@@ -148,19 +148,10 @@ Resources:
         - WSO2EIEIP
         - AllocationId
       SubnetId: !Ref WSO2EIPublicSubnet1
-#  WSO2BastionEIPAssociation:
-#    Type: 'AWS::EC2::EIPAssociation'
-#    Properties:
-#      AllocationId: !GetAtt WSO2BastionEIP.AllocationId
-#      InstanceId: !Ref WSO2BastionInstance
   WSO2EIEIP:
     Type: 'AWS::EC2::EIP'
     Properties:
       Domain: vpc
-#  WSO2BastionEIP:
-#    Type: 'AWS::EC2::EIP'
-#    Properties:
-#      Domain: vpc
   # database configurations
   WSO2EIDBInstanceSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
