@@ -148,16 +148,7 @@ Resources:
         - WSO2EIEIP
         - AllocationId
       SubnetId: !Ref WSO2EIPublicSubnet1
-  WSO2BastionEIPAssociation:
-    Type: 'AWS::EC2::EIPAssociation'
-    Properties:
-      AllocationId: !GetAtt WSO2BastionEIP.AllocationId
-      InstanceId: !Ref WSO2BastionInstance
   WSO2EIEIP:
-    Type: 'AWS::EC2::EIP'
-    Properties:
-      Domain: vpc
-  WSO2BastionEIP:
     Type: 'AWS::EC2::EIP'
     Properties:
       Domain: vpc
@@ -264,6 +255,7 @@ Resources:
           Value: WSO2BastionInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
+          AssociatePublicIpAddress : 'true'
           Description: Primary network interface
           DeviceIndex: 0
           SubnetId: !Ref WSO2EIPublicSubnet1
@@ -677,6 +669,7 @@ Parameters:
       - m3.xlarge
       - m3.2xlarge
       - m4.large
+      - m4.xlarge
     ConstraintDescription: Must be a valid EC2 instance type
   DBUsername:
     Type: String
