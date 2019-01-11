@@ -379,7 +379,6 @@ Resources:
           wget https://github.com/gvalkov/tailon/releases/download/v1.0.0/tailon_1.0.0_linux_amd64.tar.gz -P /home/ubuntu/
           chmod +x /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz -C /home/ubuntu
-#          unzip the staging product zip
           unzip /home/ubuntu/${Product}-${Version}.zip -d /home/ubuntu/
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
