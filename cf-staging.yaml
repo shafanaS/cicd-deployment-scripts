@@ -469,8 +469,9 @@ Resources:
       HealthCheckPort: 9443
       Matcher:
         HttpCode: 200
-      Name: !Ref Product
-        '-carbon-9443'
+      Name: !Join
+      - !Ref Product
+      - - '-carbon-9443'
       Port: 9443
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -500,8 +501,9 @@ Resources:
       HealthCheckPort: 8280
       Matcher:
         HttpCode: 200
-      Name: !Ref Product
-        '-carbon-8280'
+      Name: !Join
+      - !Ref Product
+      - - '-carbon-8280'
       Port: 8280
       Protocol: HTTP
       TargetGroupAttributes:
@@ -531,8 +533,9 @@ Resources:
       HealthCheckPort: 8080
       Matcher:
         HttpCode: 200
-      Name: !Ref Product
-        '-carbon-8080'
+      Name: !Join
+      - !Ref Product
+      - - '-carbon-8080'
       Port: 8080
       Protocol: HTTP
       TargetGroupAttributes:
