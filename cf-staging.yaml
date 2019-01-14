@@ -469,7 +469,8 @@ Resources:
       HealthCheckPort: 9443
       Matcher:
         HttpCode: 200
-      Name: ${Product}-carbon-9443
+      Name: !Ref Product
+            - carbon-9443
       Port: 9443
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -487,7 +488,7 @@ Resources:
         Ref: WSO2EIVPC
       Tags:
       - Key: Name
-        Value: ${Product}
+        Value: !Ref Product
   WSO2EIServicesALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -499,7 +500,8 @@ Resources:
       HealthCheckPort: 8280
       Matcher:
         HttpCode: 200
-      Name: ${Product}-carbon-8280
+      Name: !Ref Product
+            - carbon-8280
       Port: 8280
       Protocol: HTTP
       TargetGroupAttributes:
@@ -517,7 +519,7 @@ Resources:
         Ref: WSO2EIVPC
       Tags:
       - Key: Name
-        Value: ${Product}
+        Value: !Ref Product
   WSO2EILogsALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -529,7 +531,8 @@ Resources:
       HealthCheckPort: 8080
       Matcher:
         HttpCode: 200
-      Name: ${Product}-carbon-8080
+      Name: !Ref Product
+            - carbon-8080
       Port: 8080
       Protocol: HTTP
       TargetGroupAttributes:
@@ -547,7 +550,7 @@ Resources:
         Ref: WSO2EIVPC
       Tags:
       - Key: Name
-        Value: ${Product}
+        Value: !Ref Product
   WSO2EIServicesALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
