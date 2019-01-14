@@ -306,7 +306,7 @@ Resources:
           DeviceIndex: 0
           SubnetId: !Ref WSO2EIPrivateSubnet1
           GroupSet:
-            - !Ref WSO2EISecurityGroupp
+            - !Ref WSO2EISecurityGroup
       UserData: !Base64
         'Fn::Sub': |
           #cloud-boothook
