@@ -692,3 +692,7 @@ Parameters:
   AMIid:
     Type: String
     Default: ami-0f749bc5d7a0d729a
+  Product:
+    Type: String
+  Version:
+    Type: String
