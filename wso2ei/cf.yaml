@@ -276,11 +276,11 @@ Resources:
           export DB_PORT=${WSO2EIDBInstance.Endpoint.Port}
           export DB_USERNAME=${DBUsername}
           export DB_PASSWORD=${DBPassword}
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/provision_db_is.sh
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/provision_db_is.sh
-          sed -i "s/CF_DB_HOST/${WSO2EIDBInstance.Endpoint.Address}/g" /usr/local/bin/provision_db_is.sh
-          sed -i "s/CF_DB_PORT/${WSO2EIDBInstance.Endpoint.Port}/g" /usr/local/bin/provision_db_is.sh
-          bash /usr/local/bin/provision_db_is.sh
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/bashScripts/provision_db_ei.sh
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/bashScripts/provision_db_ei.sh
+          sed -i "s/CF_DB_HOST/${WSO2EIDBInstance.Endpoint.Address}/g" /usr/local/bin/bashScripts/provision_db_ei.sh
+          sed -i "s/CF_DB_PORT/${WSO2EIDBInstance.Endpoint.Port}/g" /usr/local/bin/bashScripts/provision_db_ei.sh
+          bash /usr/local/bin/bashScripts/provision_db_ei.sh ${Product}-${Version}
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
           /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2BastionInstance --region ${AWS::Region}
@@ -318,16 +318,16 @@ Resources:
           chmod +x /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz -C /home/ubuntu
           unzip /home/ubuntu/${Product}-${Version}.zip -d /home/ubuntu/
-          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
-          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
-          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/${Product}-${Version}/repository/conf/carbon.xml
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
-          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
+          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/${Product}-${Version}/conf/carbon.xml
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
-          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
+          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
@@ -380,16 +380,16 @@ Resources:
           chmod +x /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz -C /home/ubuntu
           unzip /home/ubuntu/${Product}-${Version}0.zip -d /home/ubuntu/
-          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
-          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
-          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/${Product}-${Version}/repository/conf/carbon.xml
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
-          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
+          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/${Product}-${Version}/conf/carbon.xml
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
-          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
+          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
