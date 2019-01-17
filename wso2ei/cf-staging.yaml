@@ -300,7 +300,7 @@ Resources:
       Tags:
         - Key: Name
           Value: WSO2EIInstance1
-      NetworkInterfaces:n
+      NetworkInterfaces:
         - DeleteOnTermination: 'true'
           Description: Primary network interface
           DeviceIndex: 0
