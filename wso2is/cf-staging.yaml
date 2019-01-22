@@ -336,7 +336,7 @@ Resources:
           while [ $SECONDS -lt $end ] ; do
               wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
               if [ $? -eq "0" ] ; then
-                sleep 30
+                sleep 70
                 /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2ISInstance1 --region ${AWS::Region}
               fi
           done
@@ -398,7 +398,7 @@ Resources:
           while [ $SECONDS -lt $end ] ; do
               wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
               if [ $? -eq "0" ] ; then
-                sleep 30
+                sleep 50
                 /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2ISInstance2 --region ${AWS::Region}
               fi
           done
