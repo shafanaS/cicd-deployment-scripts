@@ -14,7 +14,7 @@
 
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  WSO2 Enterprise Integrator Clustered deployment with Analytics Configured
+  WSO2 Identity Server deployment
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -336,7 +336,7 @@ Resources:
           while [ $SECONDS -lt $end ] ; do
               wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
               if [ $? -eq "0" ] ; then
-                sleep 70
+                sleep 30
                 /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2ISInstance1 --region ${AWS::Region}
               fi
           done
@@ -398,11 +398,12 @@ Resources:
           while [ $SECONDS -lt $end ] ; do
               wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
               if [ $? -eq "0" ] ; then
-                sleep 50
+                sleep 30
                 /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2ISInstance2 --region ${AWS::Region}
               fi
           done
     DependsOn:
+      - WSO2ISInstance1
       - WSO2ISLoadBalancer
       - WSO2ISSecurityGroup
       - WSO2ISVPCInternetGatewayAttachment
