@@ -14,7 +14,7 @@
 
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  WSO2 Enterprise Integrator Clustered deployment with Analytics Configured
+  WSO2 Identity Server Clustered deployment in Production
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -403,6 +403,7 @@ Resources:
               fi
           done
     DependsOn:
+      - WSO2ISInstance1
       - WSO2ISLoadBalancer
       - WSO2ISSecurityGroup
       - WSO2ISVPCInternetGatewayAttachment
