@@ -318,6 +318,7 @@ Resources:
           chmod +x /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz -C /home/ubuntu
           unzip /home/ubuntu/${Product}-${Version}.zip -d /home/ubuntu/
+          cp /home/ubuntu/endpointCars/*_staging*.car /home/ubuntu/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/${Product}-${Version}/conf/carbon.xml
@@ -380,6 +381,7 @@ Resources:
           chmod +x /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz -C /home/ubuntu
           unzip /home/ubuntu/${Product}-${Version}.zip -d /home/ubuntu/
+          cp /home/ubuntu/endpointCars/*_staging*.car /home/ubuntu/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/${Product}-${Version}/conf/carbon.xml
