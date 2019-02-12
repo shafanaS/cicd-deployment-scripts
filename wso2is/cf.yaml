@@ -326,7 +326,7 @@ Resources:
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s/IS_RDS_DNS_NAME/${WSO2ISDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
-          tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
+          tar -xvf /opt/jdk-8u192-ea-bin-b02-linux-x64-19_jul_2018.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
           /home/ubuntu/${Product}-${Version}/bin/wso2server.sh start
@@ -389,7 +389,7 @@ Resources:
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s/IS_RDS_DNS_NAME/${WSO2ISDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
-          tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
+          tar -xvf /opt/jdk-8u192-ea-bin-b02-linux-x64-19_jul_2018.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/repository/conf/axis2/axis2.xml
           /home/ubuntu/${Product}-${Version}/bin/wso2server.sh start
@@ -411,7 +411,6 @@ Resources:
       - WSO2ISVPCInternetGatewayAttachment
       - WSO2ISDBInstance
       - WSO2BastionInstance
-      - WSO2ISInstance1
   WSO2ISLoadBalancerSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:

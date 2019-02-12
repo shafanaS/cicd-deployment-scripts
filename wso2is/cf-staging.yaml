@@ -411,7 +411,6 @@ Resources:
       - WSO2ISVPCInternetGatewayAttachment
       - WSO2ISDBSTAGINGInstance
       - WSO2BastionInstance
-      - WSO2ISInstance1
   WSO2ISLoadBalancerSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
