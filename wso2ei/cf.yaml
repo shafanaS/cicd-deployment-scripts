@@ -14,7 +14,7 @@
 
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  WSO2 Enterprise Integrator Clustered deployment with Analytics Configured
+  WSO2 Enterprise Integrator Clustered deployment in Production with Analytics Configured
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -53,6 +53,10 @@ Metadata:
         default: Instance Type
       AMIid:
         default: AMI ID
+      Product:
+        default: Product
+      Version:
+        default: Version
 Resources:
   # networking configurations
   WSO2EIVPC:
@@ -272,11 +276,11 @@ Resources:
           export DB_PORT=${WSO2EIDBInstance.Endpoint.Port}
           export DB_USERNAME=${DBUsername}
           export DB_PASSWORD=${DBPassword}
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/provision_db_ei.sh
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/provision_db_ei.sh
-          sed -i "s/CF_DB_HOST/${WSO2EIDBInstance.Endpoint.Address}/g" /usr/local/bin/provision_db_ei.sh
-          sed -i "s/CF_DB_PORT/${WSO2EIDBInstance.Endpoint.Port}/g" /usr/local/bin/provision_db_ei.sh
-          bash /usr/local/bin/provision_db_ei.sh
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
+          sed -i "s/CF_DB_HOST/${WSO2EIDBInstance.Endpoint.Address}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
+          sed -i "s/CF_DB_PORT/${WSO2EIDBInstance.Endpoint.Port}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
+          bash /usr/local/bin/bashScripts/provision_db_scripts.sh ${Product}-${Version}
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
           /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2BastionInstance --region ${AWS::Region}
@@ -313,21 +317,22 @@ Resources:
           wget https://github.com/gvalkov/tailon/releases/download/v1.0.0/tailon_1.0.0_linux_amd64.tar.gz -P /home/ubuntu/
           chmod +x /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz -C /home/ubuntu
-          unzip /home/ubuntu/wso2ei-6.4.0.zip -d /home/ubuntu/
-          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
-          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
-          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/wso2ei-6.4.0/conf/carbon.xml
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
-          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
+          unzip /home/ubuntu/${Product}-${Version}.zip -d /home/ubuntu/
+          cp /home/ubuntu/endpointCars/*_production*.car /home/ubuntu/${Product}-${Version}/repository/deployment/server/carbonapps
+          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/${Product}-${Version}/conf/carbon.xml
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
-          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
-          /home/ubuntu/wso2ei-6.4.0/bin/integrator.sh start
+          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
-          nohup /home/ubuntu/tailon alias=wso2_logs,/home/ubuntu/wso2ei-6.4.0/repository/logs/* > nohup.out 2>&1 &
+          nohup /home/ubuntu/tailon alias=wso2_logs,/home/ubuntu/${Product}-${Version}/repository/logs/* > nohup.out 2>&1 &
           end=$((SECONDS+600))
           while [ $SECONDS -lt $end ] ; do
               wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
@@ -375,29 +380,30 @@ Resources:
           wget https://github.com/gvalkov/tailon/releases/download/v1.0.0/tailon_1.0.0_linux_amd64.tar.gz -P /home/ubuntu/
           chmod +x /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz -C /home/ubuntu
-          unzip /home/ubuntu/wso2ei-6.4.0.zip -d /home/ubuntu/
-          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
-          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
-          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/wso2ei-6.4.0/conf/carbon.xml
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/wso2ei-6.4.0/conf/datasources/master-datasources.xml
-          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
+          unzip /home/ubuntu/${Product}-${Version}.zip -d /home/ubuntu/
+          cp /home/ubuntu/endpointCars/*_production*.car /home/ubuntu/${Product}-${Version}/repository/deployment/server/carbonapps
+          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/${Product}-${Version}/conf/carbon.xml
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
-          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/wso2ei-6.4.0/conf/axis2/axis2.xml
-          /home/ubuntu/wso2ei-6.4.0/bin/integrator.sh start
+          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
-          nohup /home/ubuntu/tailon alias=wso2_logs,/home/ubuntu/wso2ei-6.4.0/repository/logs/* > nohup.out 2>&1 &
+          nohup /home/ubuntu/tailon alias=wso2_logs,/home/ubuntu/${Product}-${Version}/repository/logs/* > nohup.out 2>&1 &
           end=$((SECONDS+600))
           while [ $SECONDS -lt $end ] ; do
-              wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
-              if [ $? -eq "0" ] ; then
-                sleep 30
-                /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2EIInstance2 --region ${AWS::Region}
-              fi
-          done
+                wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
+                if [ $? -eq "0" ] ; then
+                  sleep 30
+                  /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2EIInstance2 --region ${AWS::Region}
+                fi
+            done
     DependsOn:
       - WSO2EILoadBalancer
       - WSO2EISecurityGroup
@@ -688,3 +694,7 @@ Parameters:
   AMIid:
     Type: String
     Default: ami-0f749bc5d7a0d729a
+  Product:
+    Type: String
+  Version:
+    Type: String
