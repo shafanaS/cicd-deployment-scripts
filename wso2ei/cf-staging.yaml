@@ -34,6 +34,7 @@ Metadata:
         Parameters:
           - DBUsername
           - DBPassword
+          - DBType
     ParameterLabels:
       AWSAccessKeyId:
         default: AWS Access Key ID
@@ -47,8 +48,6 @@ Metadata:
         default: Username
       DBPassword:
         default: Password
-      JDKVersion:
-        default: JDK Version
       WSO2InstanceType:
         default: Instance Type
       AMIid:
@@ -178,7 +177,7 @@ Resources:
       BackupRetentionPeriod: '0'
       DBInstanceIdentifier: WSO2EIDBSTAGINGInstance
       DBName: WSO2_EI_DB
-      Engine: MySQL
+      Engine: !Ref DBType
       MasterUsername: !Ref DBUsername
       MasterUserPassword: !Ref DBPassword
       MultiAZ: 'false'
@@ -276,11 +275,11 @@ Resources:
           export DB_PORT=${WSO2EIDBSTAGINGInstance.Endpoint.Port}
           export DB_USERNAME=${DBUsername}
           export DB_PASSWORD=${DBPassword}
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          sed -i "s/CF_DB_HOST/${WSO2EIDBSTAGINGInstance.Endpoint.Address}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          sed -i "s/CF_DB_PORT/${WSO2EIDBSTAGINGInstance.Endpoint.Port}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          bash /usr/local/bin/bashScripts/provision_db_scripts.sh ${Product}-${Version}
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          sed -i "s/CF_DB_HOST/${WSO2EIDBSTAGINGInstance.Endpoint.Address}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          sed -i "s/CF_DB_PORT/${WSO2EIDBSTAGINGInstance.Endpoint.Port}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          bash /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
           /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2BastionInstance --region ${AWS::Region}
@@ -679,21 +678,19 @@ Parameters:
     ConstraintDescription: Must be a valid EC2 instance type
   DBUsername:
     Type: String
-    MinLength: 4
-    AllowedPattern: '[A-Za-z0-9\-]+'
   DBPassword:
     Type: String
-    MinLength: 8
     NoEcho: true
-  JDKVersion:
+  DBType:
     Type: String
-    Default: ORACLE_JDK_8
+    Default: MySQL
     AllowedValues:
-      - OPEN_JDK_8
-      - ORACLE_JDK_8
+      - MySQL
+      - PostgreSQL
+      - Oracle
+      - SQL Server
   AMIid:
     Type: String
-    Default: ami-0f749bc5d7a0d729a
   Product:
     Type: String
   Version:
