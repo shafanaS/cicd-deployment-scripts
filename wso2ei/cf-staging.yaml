@@ -351,10 +351,6 @@ Resources:
           sudo shutdown
   WSO2EIInstance1:
     Type: 'AWS::EC2::Instance'
-    CreationPolicy:
-      ResourceSignal:
-        Count: '1'
-        Timeout: PT10M
     Properties:
       DisableApiTermination: 'false'
       InstanceInitiatedShutdownBehavior: stop
@@ -362,7 +358,7 @@ Resources:
       InstanceType: !Ref WSO2InstanceType
       IamInstanceProfile: !Ref MonitoringInstanceIAMProfile
       KeyName: !Ref KeyPairName
-      Monitoring: 'true'
+      Monitoring: 'false'
       Tags:
         - Key: Name
           Value: WSO2EIInstance1
@@ -419,10 +415,6 @@ Resources:
       - WSO2BastionInstance
   WSO2EIInstance2:
     Type: 'AWS::EC2::Instance'
-    CreationPolicy:
-      ResourceSignal:
-        Count: '1'
-        Timeout: PT10M
     Properties:
       DisableApiTermination: 'false'
       InstanceInitiatedShutdownBehavior: stop
