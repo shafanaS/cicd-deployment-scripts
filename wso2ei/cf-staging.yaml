@@ -390,7 +390,7 @@ Resources:
           sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancer.DNSName}/g" /home/ubuntu/${Product}-${Version}/conf/carbon.xml
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBSTAGINGInstance.Endpoint.Address}/g" c/master-datasources.xml
+          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBSTAGINGInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
