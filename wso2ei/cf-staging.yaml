@@ -400,7 +400,7 @@ Resources:
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
-          cat /dev/null > ~/.bash_history && history -c1
+          cat /dev/null > ~/.bash_history && history -c
           nohup /home/ubuntu/tailon alias=wso2_logs,/home/ubuntu/${Product}-${Version}/repository/logs/* > nohup.out 2>&1 &
           end=$((SECONDS+600))
           while [ $SECONDS -lt $end ] ; do

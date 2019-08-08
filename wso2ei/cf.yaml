@@ -14,7 +14,7 @@
 
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  WSO2 Enterprise Integrator Clustered deployment in Production with Analytics Configured
+  WSO2 Enterprise Integrator Clustered deployment in Production with High Availability
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:
@@ -57,6 +57,40 @@ Metadata:
       Version:
         default: Version
 Resources:
+  MonitoringInstanceIAMRole:
+    Type: AWS::IAM::Role
+    Description: IAM Instance role to read AWS resource to discover instances to monitor
+    Properties:
+      RoleName: MonitoringInstanceIAMRole
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [ec2.amazonaws.com]
+            Action: sts:AssumeRole
+      Path: /
+  MonitoringInstanceIAMProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - Ref: MonitoringInstanceIAMRole
+  MonitoringInstanceIAMPolicy:
+    Type: AWS::IAM::Policy
+    DependsOn: MonitoringInstanceIAMRole
+    Description: Read AWS resources to discover instances to monitor
+    Properties:
+      PolicyName: MonitoringInstanceReadPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: '1'
+            Effect: Allow
+            Action:
+              - elasticloadbalancing:Describe*
+              - ec2:Describe*
+            Resource: "*"
+      Roles: [!Ref MonitoringInstanceIAMRole]
   # networking configurations
   WSO2EIVPC:
     Type: 'AWS::EC2::VPC'
@@ -201,6 +235,21 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
+  MonitoringSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2EIVPC
+      GroupDescription: WSO2 Bastion node Security Group
+      GroupName: WSO2MonitoringSecurityGroup
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          SourceSecurityGroupId: !Ref BastionSecurityGroup
   WSO2EISecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -213,6 +262,18 @@ Resources:
           ToPort: 22
           CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 9200
+          ToPort: 9200
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 9100
+          ToPort: 9100
+          SourceSecurityGroupId: !Ref MonitoringSecurityGroup
+        - IpProtocol: tcp
           FromPort: '8280'
           ToPort: '8280'
           SourceSecurityGroupId: !Ref WSO2EILoadBalancerSecurityGroup
@@ -224,6 +285,10 @@ Resources:
           FromPort: '9443'
           ToPort: '9443'
           SourceSecurityGroupId: !Ref WSO2EILoadBalancerSecurityGroup
+        - IpProtocol: tcp
+          FromPort: '9443'
+          ToPort: '9443'
+          SourceSecurityGroupId: !Ref MonitoringSecurityGroup
         - IpProtocol: tcp
           FromPort: '8243'
           ToPort: '8243'
@@ -279,7 +344,7 @@ Resources:
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
           sed -i "s/CF_DB_HOST/${WSO2EIDBInstance.Endpoint.Address}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
           sed -i "s/CF_DB_PORT/${WSO2EIDBInstance.Endpoint.Port}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
-          bash /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          bash /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh 2>&1 | tee /home/ubuntu/db_log.txt
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
           /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2BastionInstance --region ${AWS::Region}
@@ -294,11 +359,16 @@ Resources:
       InstanceInitiatedShutdownBehavior: stop
       ImageId: !Ref AMIid
       InstanceType: !Ref WSO2InstanceType
+      IamInstanceProfile: !Ref MonitoringInstanceIAMProfile
       KeyName: !Ref KeyPairName
       Monitoring: 'false'
       Tags:
         - Key: Name
           Value: WSO2EIInstance1
+        - Key: Environment
+          Value: Dev
+        - Key: ServerType
+          Value: 'WSO2'
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           Description: Primary network interface
@@ -325,7 +395,7 @@ Resources:
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
           sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
-          tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
+          tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
@@ -357,11 +427,16 @@ Resources:
       InstanceInitiatedShutdownBehavior: stop
       ImageId: !Ref AMIid
       InstanceType: !Ref WSO2InstanceType
+      IamInstanceProfile: !Ref MonitoringInstanceIAMProfile
       KeyName: !Ref KeyPairName
       Monitoring: 'false'
       Tags:
         - Key: Name
           Value: WSO2EIInstance2
+        - Key: Environment
+          Value: Dev
+        - Key: ServerType
+          Value: 'WSO2'
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           Description: Primary network interface
@@ -388,7 +463,7 @@ Resources:
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
           sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
-          tar -xvf /opt/jdk-8u144-linux-x64.tar.gz -C /opt/
+          tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
@@ -414,7 +489,7 @@ Resources:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       VpcId: !Ref WSO2EIVPC
-      GroupDescription: WSO2 EI ELB Security Group
+      GroupDescription: WSO2 EI ALB Security Group
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: '9763'
@@ -611,6 +686,69 @@ Resources:
       SslPolicy: ELBSecurityPolicy-TLS-1-1-2017-01
     DependsOn:
       - WSO2EILoadBalancerSecurityGroup
+  MonitoringInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      DisableApiTermination: 'false'
+      InstanceInitiatedShutdownBehavior: stop
+      ImageId: !FindInMap
+        - WSO2MonitorMasterAMIRegionMap
+        - !Ref 'AWS::Region'
+        - Ubuntu1804
+      InstanceType: t2.large
+      IamInstanceProfile: !Ref MonitoringInstanceIAMProfile
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: '50'
+            VolumeType: gp2
+            DeleteOnTermination: 'true'
+      KeyName: !Ref KeyPairName
+      Monitoring: 'false'
+      Tags:
+        - Key: Name
+          Value: WSO2MonitoringInstance
+      NetworkInterfaces:
+        - DeleteOnTermination: 'true'
+          AssociatePublicIpAddress: 'true'
+          Description: Primary network interface
+          DeviceIndex: 0
+          SubnetId: !Ref WSO2EIPublicSubnet1
+          GroupSet:
+            - !Ref MonitoringSecurityGroup
+      UserData: !Base64
+        'Fn::Sub': |
+          Content-Type: multipart/mixed; boundary="//"
+          MIME-Version: 1.0
+
+          --//
+          Content-Type: text/cloud-config; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="cloud-config.txt"
+
+          #cloud-config
+          cloud_final_modules:
+          - [scripts-user, always]
+
+          --//
+          Content-Type: text/x-shellscript; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="userdata.txt"
+          #!/bin/bash
+          exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+          export PATH=~/.local/bin:$PATH
+          export REGION=${AWS::Region}
+          sed -i "s/REGION_NAME/$REGION/g" /etc/prometheus/prometheus.yml
+          service prometheus restart
+          echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
+          cat /dev/null > ~/.bash_history && history -c
+    DependsOn:
+      - WSO2EISecurityGroup
+      - WSO2EILoadBalancer
+      - WSO2EIVPCInternetGatewayAttachment
+      - WSO2EIDBSTAGINGInstance
 Outputs:
   MgtConsoleUrl:
     Value: !Join
@@ -648,6 +786,15 @@ Outputs:
           - DNSName
         - ':8243'
     Description: ESB HTTPSURL
+  MonitoringHttpUrl:
+    Value: !Join
+      - ''
+      - - 'http://'
+        - !GetAtt
+          - MonitoringInstance
+          - PublicDnsName
+        - ':3000/d/dxHncuHS/'
+    Description: Monitoring HTTP URL
 Parameters:
   AWSAccessKeyId:
     Type: String
@@ -659,7 +806,7 @@ Parameters:
     Type: 'AWS::EC2::KeyPair::KeyName'
   CertificateName:
     Description: A valid SSL certificate used for HTTPS
-    Type: 'AWS::CertificateManager::Certificate'
+    Type: String
     MinLength: 1
   WSO2InstanceType:
     Type: String
@@ -695,3 +842,18 @@ Parameters:
     Type: String
   Version:
     Type: String
+Mappings:
+  WSO2MonitorMasterAMIRegionMap:
+    ap-southeast-2:
+      Ubuntu1804: ami-07db0bd7843431ecc
+    eu-west-1:
+      Ubuntu1804: ami-08c5f1ea8c1e595c5
+    us-east-1:
+      Ubuntu1804: ami-0ca663a3c8ebd88d3
+    us-east-2:
+      Ubuntu1804: ami-063864b50ccf81441
+    us-west-1:
+      Ubuntu1804: ami-0902b0e7f264e52e0
+    us-west-2:
+      Ubuntu1804: ami-009e0a594bc3acf10
+
