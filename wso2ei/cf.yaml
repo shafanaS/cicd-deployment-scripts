@@ -809,7 +809,7 @@ Resources:
         - WSO2LoggingMasterAMIRegionMap
         - !Ref 'AWS::Region'
         - Ubuntu1804
-      InstanceType: !Ref LoggingInstanceType
+      InstanceType: t2.large
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
