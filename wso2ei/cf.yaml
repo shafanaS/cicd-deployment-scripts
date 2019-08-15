@@ -692,7 +692,7 @@ Resources:
       HealthCheckPort: 8280
       Matcher:
         HttpCode: 200
-      Name: ei-carbon-8280
+      Name: ei-carbon-prod-8280
       Port: 8280
       Protocol: HTTP
       TargetGroupAttributes:
