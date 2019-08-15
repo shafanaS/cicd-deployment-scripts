@@ -57,11 +57,11 @@ Metadata:
       Version:
         default: Version
 Resources:
-  MonitoringInstanceIAMRole:
+  MonitoringInstanceIAMRoleProd:
     Type: AWS::IAM::Role
     Description: IAM Instance role to read AWS resource to discover instances to monitor
     Properties:
-      RoleName: MonitoringInstanceIAMRole
+      RoleName: MonitoringInstanceIAMRoleProd
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -74,10 +74,10 @@ Resources:
     Properties:
       Path: "/"
       Roles:
-        - Ref: MonitoringInstanceIAMRole
+        - Ref: MonitoringInstanceIAMRoleProd
   MonitoringInstanceIAMPolicy:
     Type: AWS::IAM::Policy
-    DependsOn: MonitoringInstanceIAMRole
+    DependsOn: MonitoringInstanceIAMRoleProd
     Description: Read AWS resources to discover instances to monitor
     Properties:
       PolicyName: MonitoringInstanceReadPolicy
@@ -90,7 +90,7 @@ Resources:
               - elasticloadbalancing:Describe*
               - ec2:Describe*
             Resource: "*"
-      Roles: [!Ref MonitoringInstanceIAMRole]
+      Roles: [!Ref MonitoringInstanceIAMRoleProd]
   # networking configurations
   WSO2EIVPC:
     Type: 'AWS::EC2::VPC'
