@@ -235,6 +235,24 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
+  LoggingSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref WSO2EIVPC
+      GroupDescription: WSO2 Logging Security Group
+      GroupName: WSO2LoggingSecurityGroup
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5601
+          ToPort: 5601
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          SourceSecurityGroupId: !Ref BastionSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 5044
+          ToPort: 5044
   MonitoringSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -415,7 +433,6 @@ Resources:
         - !Ref WSO2EIALBTargetGroup
         - !Ref WSO2EI8243ALBTargetGroup
         - !Ref WSO2EIServicesALBTargetGroup
-        - !Ref WSO2EILogsALBTargetGroup
       VPCZoneIdentifier:
         - !Ref WSO2EIPrivateSubnet1
       Tags:
@@ -512,7 +529,6 @@ Resources:
         - !Ref WSO2EIALBTargetGroup
         - !Ref WSO2EI8243ALBTargetGroup
         - !Ref WSO2EIServicesALBTargetGroup
-        - !Ref WSO2EILogsALBTargetGroup
       VPCZoneIdentifier:
         - !Ref WSO2EIPrivateSubnet2
       Tags:
@@ -690,31 +706,6 @@ Resources:
       Tags:
         - Key: Name
           Value: ei
-  WSO2EILogsALBTargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      HealthCheckIntervalSeconds: 10
-      HealthCheckProtocol: HTTP
-      HealthCheckTimeoutSeconds: 5
-      HealthyThresholdCount: 4
-      HealthCheckPath: /
-      HealthCheckPort: 8080
-      Matcher:
-        HttpCode: 200
-      Name: ei-carbon-8080
-      Port: 8080
-      Protocol: HTTP
-      TargetGroupAttributes:
-        - Key: deregistration_delay.timeout_seconds
-          Value: '20'
-        - Key: stickiness.enabled
-          Value: 'true'
-      UnhealthyThresholdCount: 3
-      VpcId:
-        Ref: WSO2EIVPC
-      Tags:
-        - Key: Name
-          Value: ei
   WSO2EIServicesALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -723,15 +714,6 @@ Resources:
           TargetGroupArn: !Ref WSO2EIServicesALBTargetGroup
       LoadBalancerArn: !Ref WSO2EILoadBalancer
       Port: 8280
-      Protocol: HTTP
-  WSO2EILogsALBListener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref WSO2EILogsALBTargetGroup
-      LoadBalancerArn: !Ref WSO2EILoadBalancer
-      Port: 8080
       Protocol: HTTP
   WSO2EIALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -818,6 +800,49 @@ Resources:
       - WSO2EILoadBalancer
       - WSO2EIVPCInternetGatewayAttachment
       - WSO2EIDBSTAGINGInstance
+  LoggingInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      DisableApiTermination: 'false'
+      InstanceInitiatedShutdownBehavior: stop
+      ImageId: !FindInMap
+        - WSO2LoggingMasterAMIRegionMap
+        - !Ref 'AWS::Region'
+        - Ubuntu1804
+      InstanceType: t2.large
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: '50'
+            VolumeType: gp2
+            DeleteOnTermination: 'true'
+      KeyName: !Ref KeyPairName
+      Monitoring: 'false'
+      Tags:
+        - Key: Name
+          Value: WSO2LoggingInstance
+      NetworkInterfaces:
+        - DeleteOnTermination: 'true'
+          AssociatePublicIpAddress: 'true'
+          Description: Primary network interface
+          DeviceIndex: 0
+          SubnetId: !Ref WSO2EIPublicSubnet1
+          GroupSet:
+            - !Ref LoggingSecurityGroup
+      UserData: !Base64
+        'Fn::Sub': |
+          #cloud-config
+          #!/bin/bash
+          exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+          export PATH=~/.local/bin:$PATH
+          export REGION=${AWS::Region}
+          echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
+          cat /dev/null > ~/.bash_history && history -c
+    DependsOn:
+      - WSO2EISecurityGroup
+      - WSO2EILoadBalancer
+      - WSO2EIVPCInternetGatewayAttachment
+      - WSO2EIDBSTAGINGInstance
 Outputs:
   MgtConsoleUrl:
     Value: !Join
@@ -864,6 +889,15 @@ Outputs:
           - PublicDnsName
         - ':3000/d/dxHncuHS/'
     Description: Monitoring HTTP URL
+  LoggingHttpUrl:
+    Value: !Join
+      - ''
+      - - 'http://'
+        - !GetAtt
+          - LoggingInstance
+          - PublicDnsName
+        - ':5601'
+    Description: Logging HTTP URL
 Parameters:
   AWSAccessKeyId:
     Type: String
@@ -925,3 +959,6 @@ Mappings:
       Ubuntu1804: ami-0902b0e7f264e52e0
     us-west-2:
       Ubuntu1804: ami-009e0a594bc3acf10
+  WSO2LoggingMasterAMIRegionMap:
+    us-east-1:
+      Ubuntu1804: ami-0d0b6efe5cd67392b
