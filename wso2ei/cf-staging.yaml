@@ -394,7 +394,7 @@ Resources:
         Timeout: PT20M
     UpdatePolicy:
       AutoScalingRollingUpdate:
-        MaxBatchSize: '2'
+        MaxBatchSize: '3'
         MinInstancesInService: '1'
         PauseTime: PT10M
         SuspendProcesses:
@@ -486,7 +486,7 @@ Resources:
         Timeout: PT20M
     UpdatePolicy:
       AutoScalingRollingUpdate:
-        MaxBatchSize: '2'
+        MaxBatchSize: '3'
         MinInstancesInService: '1'
         PauseTime: PT10M
         SuspendProcesses:
