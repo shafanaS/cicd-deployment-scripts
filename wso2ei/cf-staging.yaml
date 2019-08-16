@@ -374,7 +374,7 @@ Resources:
       LaunchConfigurationName: !Ref WSO2EINode1LaunchConfiguration
       DesiredCapacity: 1
       MinSize: 1
-      MaxSize: 1
+      MaxSize: 2
       TargetGroupARNs:
         - !Ref WSO2EIALBTargetGroup
         - !Ref WSO2EI8243ALBTargetGroup
@@ -394,7 +394,7 @@ Resources:
         Timeout: PT20M
     UpdatePolicy:
       AutoScalingRollingUpdate:
-        MaxBatchSize: '3'
+        MaxBatchSize: '2'
         MinInstancesInService: '1'
         PauseTime: PT10M
         SuspendProcesses:
@@ -466,7 +466,7 @@ Resources:
       LaunchConfigurationName: !Ref WSO2EINode2LaunchConfiguration
       DesiredCapacity: 1
       MinSize: 1
-      MaxSize: 1
+      MaxSize: 2
       TargetGroupARNs:
         - !Ref WSO2EIALBTargetGroup
         - !Ref WSO2EI8243ALBTargetGroup
@@ -486,7 +486,7 @@ Resources:
         Timeout: PT20M
     UpdatePolicy:
       AutoScalingRollingUpdate:
-        MaxBatchSize: '3'
+        MaxBatchSize: '2'
         MinInstancesInService: '1'
         PauseTime: PT10M
         SuspendProcesses:
