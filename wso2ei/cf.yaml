@@ -253,6 +253,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: 5044
           ToPort: 5044
+          CidrIp: 0.0.0.0/0
   MonitoringSecurityGroupProd:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -403,6 +404,8 @@ Resources:
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
+          export LogserverIP=${LoggingInstanceProd.PrivateIp}
+          echo "$LogserverIP logserver" >> /etc/hosts
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
@@ -422,6 +425,7 @@ Resources:
       - WSO2EIVPCInternetGatewayAttachment
       - WSO2EIDBInstance
       - WSO2BastionInstanceProd
+      - LoggingInstanceProd
   WSO2EINode1AutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
@@ -499,6 +503,8 @@ Resources:
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
+          export LogserverIP=${LoggingInstanceProd.PrivateIp}
+          echo "$LogserverIP logserver" >> /etc/hosts
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
           /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
@@ -518,6 +524,7 @@ Resources:
       - WSO2EIVPCInternetGatewayAttachment
       - WSO2EIDBInstance
       - WSO2BastionInstanceProd
+      - LoggingInstanceProd
   WSO2EINode2AutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
