@@ -468,7 +468,7 @@ Resources:
         - !Ref WSO2ISPrivateSubnet2
       Tags:
         - Key: Name
-          Value: WSO2ISInstance2Prod
+          Value: WSO2ISInstance2
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: is
@@ -680,7 +680,7 @@ Resources:
       SslPolicy: ELBSecurityPolicy-TLS-1-1-2017-01
     DependsOn:
       - WSO2ISLoadBalancerSecurityGroup
-  LoggingInstanceProd:
+  LoggingInstance:
     Type: 'AWS::EC2::Instance'
     Properties:
       DisableApiTermination: 'false'
@@ -700,7 +700,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2LoggingInstanceProd
+          Value: WSO2LoggingInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress: 'true'
@@ -722,7 +722,7 @@ Resources:
       - WSO2ISSecurityGroup
       - WSO2ISLoadBalancer
       - WSO2ISVPCInternetGatewayAttachment
-      - WSO2ISDBInstance
+      - WSO2ISDBSTAGINGInstance
 Outputs:
   MgtConsoleUrl:
     Value: !Join
