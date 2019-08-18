@@ -482,7 +482,7 @@ Resources:
           - AlarmNotification
         WaitOnResourceSignals: true
     DependsOn:
-      - WSO2ISLoadBalancerProd
+      - WSO2ISLoadBalancer
   WSO2ISLoadBalancerSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
