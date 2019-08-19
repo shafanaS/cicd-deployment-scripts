@@ -326,7 +326,7 @@ Resources:
         - IpProtocol: tcp
           FromPort: '8140'
           ToPort: '8140'
-          SourceSecurityGroupId: !Ref WSO2ISLoadBalancerSecurityGroup
+          SourceSecurityGroupId: !Ref WSO2ISLoadBalancerSecurityGroupProd
   WSO2BastionInstanceProd:
     Type: 'AWS::EC2::Instance'
     Properties:
