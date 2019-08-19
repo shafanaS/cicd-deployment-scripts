@@ -358,10 +358,10 @@ Resources:
           export DB_PORT=${WSO2ISDBInstance.Endpoint.Port}
           export DB_USERNAME=${DBUsername}
           export DB_PASSWORD=${DBPassword}
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          sed -i "s/CF_DB_HOST/${WSO2ISDBInstance.Endpoint.Address}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          sed -i "s/CF_DB_PORT/${WSO2ISDBInstance.Endpoint.Port}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          sed -i "s/CF_DB_HOST/${WSO2ISDBInstance.Endpoint.Address}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          sed -i "s/CF_DB_PORT/${WSO2ISDBInstance.Endpoint.Port}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
           bash /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh 2>&1 | tee /home/wso2/db_log.txt
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
@@ -424,6 +424,7 @@ Resources:
       - WSO2ISVPCInternetGatewayAttachment
       - WSO2ISDBInstance
       - WSO2BastionInstanceProd
+      - LoggingInstanceProd
   WSO2ISNode1AutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
@@ -522,6 +523,7 @@ Resources:
       - WSO2ISVPCInternetGatewayAttachment
       - WSO2ISDBInstance
       - WSO2BastionInstanceProd
+      - LoggingInstanceProd
   WSO2ISNode2AutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
@@ -856,7 +858,7 @@ Outputs:
           - WSO2ISLoadBalancerProd
           - DNSName
         - '/carbon'
-    Description: Integrator Carbon Management Console URL
+    Description: Identity Server Management Console URL
   CarbonServerUrl:
     Value: !Join
       - ''
@@ -866,7 +868,7 @@ Outputs:
           - DNSName
         - '/services'
     Description: Carbon Server URL
-  ESBHttpUrl:
+  ISHttpUrl:
     Value: !Join
     - ''
     - - 'https://'
@@ -874,8 +876,8 @@ Outputs:
         - WSO2ISLoadBalancerProd
         - DNSName
       - '/carbon'
-    Description: ESB HTTP URL
-  ESBHttpsUrl:
+    Description: IS HTTP Gateway URL
+  ISHttpsUrl:
     Value: !Join
       - ''
       - - 'https://'
@@ -883,7 +885,7 @@ Outputs:
           - WSO2ISLoadBalancerProd
           - DNSName
         - ':8243'
-    Description: ESB HTTPSURL
+    Description: IS HTTPS Gateway URL
   MonitoringHttpUrl:
     Value: !Join
       - ''

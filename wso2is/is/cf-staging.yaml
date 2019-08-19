@@ -301,11 +301,11 @@ Resources:
           export DB_PORT=${WSO2ISDBSTAGINGInstance.Endpoint.Port}
           export DB_USERNAME=${DBUsername}
           export DB_PASSWORD=${DBPassword}
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          sed -i "s/CF_DB_HOST/${WSO2ISDBSTAGINGInstance.Endpoint.Address}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          sed -i "s/CF_DB_PORT/${WSO2ISDBSTAGINGInstance.Endpoint.Port}/g" /usr/local/bin/bashScripts/provision_db_scripts.sh
-          bash /usr/local/bin/bashScripts/provision_db_scripts.sh 2>&1 | tee /home/wso2/db_log.txt
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          sed -i "s/CF_DB_HOST/${WSO2ISDBSTAGINGInstance.Endpoint.Address}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          sed -i "s/CF_DB_PORT/${WSO2ISDBSTAGINGInstance.Endpoint.Port}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
+          bash /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh 2>&1 | tee /home/wso2/db_log.txt
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
           /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2BastionInstance --region ${AWS::Region}
@@ -366,6 +366,7 @@ Resources:
       - WSO2ISVPCInternetGatewayAttachment
       - WSO2ISDBSTAGINGInstance
       - WSO2BastionInstance
+      - LoggingInstance
   WSO2ISNode1AutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
@@ -386,6 +387,10 @@ Resources:
         - Key: cluster
           Value: is
           PropagateAtLaunch: 'true'
+    CreationPolicy:
+      ResourceSignal:
+        Count: 1
+        Timeout: PT20M
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MaxBatchSize: '2'
@@ -453,6 +458,7 @@ Resources:
       - WSO2ISVPCInternetGatewayAttachment
       - WSO2ISDBSTAGINGInstance
       - WSO2BastionInstance
+      - LoggingInstance
   WSO2ISNode2AutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
@@ -473,6 +479,10 @@ Resources:
         - Key: cluster
           Value: is
           PropagateAtLaunch: 'true'
+    CreationPolicy:
+      ResourceSignal:
+        Count: 1
+        Timeout: PT20M
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MaxBatchSize: '2'
@@ -732,7 +742,7 @@ Outputs:
           - WSO2ISLoadBalancer
           - DNSName
         - '/carbon'
-    Description: Integrator Carbon Management Console URL
+    Description: Identity Server Management Console URL
   CarbonServerUrl:
     Value: !Join
       - ''
@@ -750,7 +760,7 @@ Outputs:
         - WSO2ISLoadBalancer
         - DNSName
       - '/carbon'
-    Description: ESB HTTP URL
+    Description: IS HTTP Gateway URL
   ESBHttpsUrl:
     Value: !Join
       - ''
@@ -759,7 +769,7 @@ Outputs:
           - WSO2ISLoadBalancer
           - DNSName
         - ':8243'
-    Description: ESB HTTPSURL
+    Description: IS HTTPS Gateway URL
   LoggingHttpUrl:
     Value: !Join
       - ''
