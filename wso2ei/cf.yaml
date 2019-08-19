@@ -363,7 +363,7 @@ Resources:
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
           sed -i "s/CF_DB_HOST/${WSO2EIDBInstance.Endpoint.Address}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
           sed -i "s/CF_DB_PORT/${WSO2EIDBInstance.Endpoint.Port}/g" /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh
-          bash /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh 2>&1 | tee /home/ubuntu/db_log.txt
+          bash /usr/local/bin/bashScripts/MySQL/provision_db_scripts.sh 2>&1 | tee /home/wso2/db_log.txt
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
           /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2BastionInstanceProd --region ${AWS::Region}
@@ -390,27 +390,27 @@ Resources:
           export PATH=~/.local/bin:$PATH
           apt-get update
           pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
-          wget https://github.com/gvalkov/tailon/releases/download/v1.0.0/tailon_1.0.0_linux_amd64.tar.gz -P /home/ubuntu/
-          chmod +x /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz
-          tar -xvf /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz -C /home/ubuntu
-          unzip /home/ubuntu/${Product}-${Version}.zip -d /home/ubuntu/
-          cp /home/ubuntu/endpointCars/*_production*.car /home/ubuntu/${Product}-${Version}/repository/deployment/server/carbonapps
-          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
-          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
-          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancerProd.DNSName}/g" /home/ubuntu/${Product}-${Version}/conf/carbon.xml
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
-          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          wget https://github.com/gvalkov/tailon/releases/download/v1.0.0/tailon_1.0.0_linux_amd64.tar.gz -P /home/wso2/
+          chmod +x /home/wso2/tailon_1.0.0_linux_amd64.tar.gz
+          tar -xvf /home/wso2/tailon_1.0.0_linux_amd64.tar.gz -C /home/wso2
+          unzip /home/wso2/${Product}-${Version}.zip -d /home/wso2/
+          cp /home/wso2/endpointCars/*_production*.car /home/wso2/${Product}-${Version}/repository/deployment/server/carbonapps
+          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancerProd.DNSName}/g" /home/wso2/${Product}-${Version}/conf/carbon.xml
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/wso2/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/wso2/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/wso2/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/wso2/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
           export LogserverIP=${LoggingInstanceProd.PrivateIp}
           echo "$LogserverIP logserver" >> /etc/hosts
-          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
-          /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
+          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/wso2/${Product}-${Version}/conf/axis2/axis2.xml
+          /home/wso2/${Product}-${Version}/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
-          nohup /home/ubuntu/tailon alias=wso2_logs,/home/ubuntu/${Product}-${Version}/repository/logs/* > nohup.out 2>&1 &
+          nohup /home/wso2/tailon alias=wso2_logs,/home/wso2/${Product}-${Version}/repository/logs/* > nohup.out 2>&1 &
           end=$((SECONDS+600))
           while [ $SECONDS -lt $end ] ; do
               wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
@@ -432,7 +432,7 @@ Resources:
       LaunchConfigurationName: !Ref WSO2EINode1LaunchConfiguration
       DesiredCapacity: 1
       MinSize: 1
-      MaxSize: 1
+      MaxSize: 2
       TargetGroupARNs:
         - !Ref WSO2EIALBTargetGroupProd
         - !Ref WSO2EI8243ALBTargetGroupProd
@@ -489,27 +489,27 @@ Resources:
           export PATH=~/.local/bin:$PATH
           apt-get update
           pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
-          wget https://github.com/gvalkov/tailon/releases/download/v1.0.0/tailon_1.0.0_linux_amd64.tar.gz -P /home/ubuntu/
-          chmod +x /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz
-          tar -xvf /home/ubuntu/tailon_1.0.0_linux_amd64.tar.gz -C /home/ubuntu
-          unzip /home/ubuntu/${Product}-${Version}.zip -d /home/ubuntu/
-          cp /home/ubuntu/endpointCars/*_production*.car /home/ubuntu/${Product}-${Version}/repository/deployment/server/carbonapps
-          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
-          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
-          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancerProd.DNSName}/g" /home/ubuntu/${Product}-${Version}/conf/carbon.xml
-          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
-          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/ubuntu/${Product}-${Version}/conf/datasources/master-datasources.xml
-          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
+          wget https://github.com/gvalkov/tailon/releases/download/v1.0.0/tailon_1.0.0_linux_amd64.tar.gz -P /home/wso2/
+          chmod +x /home/wso2/tailon_1.0.0_linux_amd64.tar.gz
+          tar -xvf /home/wso2/tailon_1.0.0_linux_amd64.tar.gz -C /home/wso2
+          unzip /home/wso2/${Product}-${Version}.zip -d /home/wso2/
+          cp /home/wso2/endpointCars/*_production*.car /home/wso2/${Product}-${Version}/repository/deployment/server/carbonapps
+          sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2/${Product}-${Version}/conf/axis2/axis2.xml
+          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancerProd.DNSName}/g" /home/wso2/${Product}-${Version}/conf/carbon.xml
+          sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/wso2/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/wso2/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/wso2/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/wso2/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
           export LogserverIP=${LoggingInstanceProd.PrivateIp}
           echo "$LogserverIP logserver" >> /etc/hosts
-          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/ubuntu/${Product}-${Version}/conf/axis2/axis2.xml
-          /home/ubuntu/${Product}-${Version}/bin/integrator.sh start
+          sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/wso2/${Product}-${Version}/conf/axis2/axis2.xml
+          /home/wso2/${Product}-${Version}/bin/integrator.sh start
           echo 'export HISTTIMEFORMAT="%F %T "' >> /etc/profile.d/history.sh
           cat /dev/null > ~/.bash_history && history -c
-          nohup /home/ubuntu/tailon alias=wso2_logs,/home/ubuntu/${Product}-${Version}/repository/logs/* > nohup.out 2>&1 &
+          nohup /home/wso2/tailon alias=wso2_logs,/home/wso2/${Product}-${Version}/repository/logs/* > nohup.out 2>&1 &
           end=$((SECONDS+600))
           while [ $SECONDS -lt $end ] ; do
               wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
@@ -531,7 +531,7 @@ Resources:
       LaunchConfigurationName: !Ref WSO2EINode2LaunchConfiguration
       DesiredCapacity: 1
       MinSize: 1
-      MaxSize: 1
+      MaxSize: 2
       TargetGroupARNs:
         - !Ref WSO2EIALBTargetGroupProd
         - !Ref WSO2EI8243ALBTargetGroupProd
@@ -969,3 +969,5 @@ Mappings:
   WSO2LoggingMasterAMIRegionMap:
     us-east-1:
       Ubuntu1804: ami-0d0b6efe5cd67392b
+    us-east-2:
+      Ubuntu1804: ami-013395e82478747ce
