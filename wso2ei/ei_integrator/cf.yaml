@@ -293,6 +293,10 @@ Resources:
           ToPort: 9100
           SourceSecurityGroupId: !Ref MonitoringSecurityGroupProd
         - IpProtocol: tcp
+          FromPort: '2222'
+          ToPort: '2222'
+          SourceSecurityGroupId: !Ref MonitoringSecurityGroupProd
+        - IpProtocol: tcp
           FromPort: '8280'
           ToPort: '8280'
           SourceSecurityGroupId: !Ref WSO2EILoadBalancerSecurityGroupProd
@@ -350,7 +354,25 @@ Resources:
             - !Ref BastionSecurityGroupProd
       UserData: !Base64
         'Fn::Sub': |
-          #cloud-boothook
+          Content-Type: multipart/mixed; boundary="//"
+          MIME-Version: 1.0
+
+          --//
+          Content-Type: text/cloud-config; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="cloud-config.txt"
+
+          #cloud-config
+          cloud_final_modules:
+          - [scripts-user, always]
+
+          --//
+          Content-Type: text/x-shellscript; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="userdata.txt"
+
           #!/bin/bash
           export PATH=~/.local/bin:$PATH
           apt-get update
@@ -385,7 +407,25 @@ Resources:
         - !Ref WSO2EISecurityGroupProd
       UserData: !Base64
         'Fn::Sub': |
-          #cloud-boothook
+          Content-Type: multipart/mixed; boundary="//"
+          MIME-Version: 1.0
+
+          --//
+          Content-Type: text/cloud-config; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="cloud-config.txt"
+
+          #cloud-config
+          cloud_final_modules:
+          - [scripts-user, always]
+
+          --//
+          Content-Type: text/x-shellscript; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="userdata.txt"
+
           #!/bin/bash
           export PATH=~/.local/bin:$PATH
           apt-get update
@@ -954,18 +994,10 @@ Parameters:
     Type: String
 Mappings:
   WSO2MonitorMasterAMIRegionMap:
-    ap-southeast-2:
-      Ubuntu1804: ami-07db0bd7843431ecc
-    eu-west-1:
-      Ubuntu1804: ami-08c5f1ea8c1e595c5
     us-east-1:
-      Ubuntu1804: ami-0ca663a3c8ebd88d3
+      Ubuntu1804: ami-083c0e85f541eb68e
     us-east-2:
-      Ubuntu1804: ami-063864b50ccf81441
-    us-west-1:
-      Ubuntu1804: ami-0902b0e7f264e52e0
-    us-west-2:
-      Ubuntu1804: ami-009e0a594bc3acf10
+      Ubuntu1804: ami-0ca853307dbe2b2d7
   WSO2LoggingMasterAMIRegionMap:
     us-east-1:
       Ubuntu1804: ami-0d0b6efe5cd67392b

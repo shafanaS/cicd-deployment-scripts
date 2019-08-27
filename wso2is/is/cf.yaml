@@ -309,6 +309,10 @@ Resources:
           ToPort: '9443'
           SourceSecurityGroupId: !Ref MonitoringSecurityGroupProd
         - IpProtocol: tcp
+          FromPort: '2222'
+          ToPort: '2222'
+          SourceSecurityGroupId: !Ref MonitoringSecurityGroupProd
+        - IpProtocol: tcp
           FromPort: '8243'
           ToPort: '8243'
           SourceSecurityGroupId: !Ref WSO2ISLoadBalancerSecurityGroupProd
@@ -385,7 +389,25 @@ Resources:
         - !Ref WSO2ISSecurityGroupProd
       UserData: !Base64
         'Fn::Sub': |
-          #cloud-boothook
+          Content-Type: multipart/mixed; boundary="//"
+          MIME-Version: 1.0
+
+          --//
+          Content-Type: text/cloud-config; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="cloud-config.txt"
+
+          #cloud-config
+          cloud_final_modules:
+          - [scripts-user, always]
+
+          --//
+          Content-Type: text/x-shellscript; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="userdata.txt"
+
           #!/bin/bash
           export PATH=~/.local/bin:$PATH
           apt-get update
@@ -394,7 +416,6 @@ Resources:
           chmod +x /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz -C /home/wso2user
           unzip /home/wso2user/${Product}-${Version}.zip -d /home/wso2user/
-          cp /home/wso2user/endpointCars/*_production*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/IS_ALB_DNS_NAME/${WSO2ISLoadBalancerProd.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/carbon.xml
@@ -484,7 +505,25 @@ Resources:
         - !Ref WSO2ISSecurityGroupProd
       UserData: !Base64
         'Fn::Sub': |
-          #cloud-boothook
+          Content-Type: multipart/mixed; boundary="//"
+          MIME-Version: 1.0
+
+          --//
+          Content-Type: text/cloud-config; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="cloud-config.txt"
+
+          #cloud-config
+          cloud_final_modules:
+          - [scripts-user, always]
+
+          --//
+          Content-Type: text/x-shellscript; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="userdata.txt"
+
           #!/bin/bash
           export PATH=~/.local/bin:$PATH
           apt-get update
@@ -493,7 +532,6 @@ Resources:
           chmod +x /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz -C /home/wso2user
           unzip /home/wso2user/${Product}-${Version}.zip -d /home/wso2user/
-          cp /home/wso2user/endpointCars/*_production*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/IS_ALB_DNS_NAME/${WSO2ISLoadBalancerProd.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/carbon.xml
@@ -954,18 +992,10 @@ Parameters:
     Type: String
 Mappings:
   WSO2MonitorMasterAMIRegionMap:
-    ap-southeast-2:
-      Ubuntu1804: ami-07db0bd7843431ecc
-    eu-west-1:
-      Ubuntu1804: ami-08c5f1ea8c1e595c5
     us-east-1:
-      Ubuntu1804: ami-0ca663a3c8ebd88d3
+      Ubuntu1804: ami-083c0e85f541eb68e
     us-east-2:
-      Ubuntu1804: ami-063864b50ccf81441
-    us-west-1:
-      Ubuntu1804: ami-0902b0e7f264e52e0
-    us-west-2:
-      Ubuntu1804: ami-009e0a594bc3acf10
+      Ubuntu1804: ami-0ca853307dbe2b2d7
   WSO2LoggingMasterAMIRegionMap:
     us-east-1:
       Ubuntu1804: ami-0d0b6efe5cd67392b
