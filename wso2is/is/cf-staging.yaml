@@ -884,4 +884,6 @@ Mappings:
     us-east-1:
       Ubuntu1804: ami-0820cde1afa9bdc7a
     us-east-2:
-      Ubuntu1804: ami-013395e82478747ce
+      Ubuntu1804: ami-063c7ff0a6b1fb4c5
+    us-west-1:
+      Ubuntu1804: ami-0d39a26f7914201c5
