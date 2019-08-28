@@ -487,7 +487,7 @@ Resources:
           Value: ei
           PropagateAtLaunch: 'true'
         - Key: Environment
-          Value: Dev
+          Value: Prod
           PropagateAtLaunch: 'true'
         - Key: ServerType
           Value: 'WSO2'
@@ -524,7 +524,25 @@ Resources:
         - !Ref WSO2EISecurityGroupProd
       UserData: !Base64
         'Fn::Sub': |
-          #cloud-boothook
+          Content-Type: multipart/mixed; boundary="//"
+          MIME-Version: 1.0
+
+          --//
+          Content-Type: text/cloud-config; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="cloud-config.txt"
+
+          #cloud-config
+          cloud_final_modules:
+          - [scripts-user, always]
+
+          --//
+          Content-Type: text/x-shellscript; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="userdata.txt"
+
           #!/bin/bash
           export PATH=~/.local/bin:$PATH
           apt-get update
@@ -586,7 +604,7 @@ Resources:
           Value: ei
           PropagateAtLaunch: 'true'
         - Key: Environment
-          Value: Dev
+          Value: Prod
           PropagateAtLaunch: 'true'
         - Key: ServerType
           Value: 'WSO2'
