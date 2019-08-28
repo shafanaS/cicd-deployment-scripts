@@ -1013,7 +1013,7 @@ Mappings:
     us-east-1:
       Ubuntu1804: ami-09f5657563da4b75e
     us-east-2:
-      Ubuntu1804: ami-0ca853307dbe2b2d7
+      Ubuntu1804: ami-0ad0345fd38d07695
   WSO2LoggingMasterAMIRegionMap:
     us-east-1:
       Ubuntu1804: ami-0d0b6efe5cd67392b
