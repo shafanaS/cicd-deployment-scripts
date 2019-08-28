@@ -882,6 +882,6 @@ Parameters:
 Mappings:
   WSO2LoggingMasterAMIRegionMap:
     us-east-1:
-      Ubuntu1804: ami-0d0b6efe5cd67392b
+      Ubuntu1804: ami-0820cde1afa9bdc7a
     us-east-2:
       Ubuntu1804: ami-013395e82478747ce

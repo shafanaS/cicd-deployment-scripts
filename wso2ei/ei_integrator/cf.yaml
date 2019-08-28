@@ -1013,11 +1013,11 @@ Parameters:
 Mappings:
   WSO2MonitorMasterAMIRegionMap:
     us-east-1:
-      Ubuntu1804: ami-09f5657563da4b75e
+      Ubuntu1804: ami-0f9800322e816f39e
     us-east-2:
       Ubuntu1804: ami-0ad0345fd38d07695
   WSO2LoggingMasterAMIRegionMap:
     us-east-1:
-      Ubuntu1804: ami-0d0b6efe5cd67392b
+      Ubuntu1804: ami-0820cde1afa9bdc7a
     us-east-2:
       Ubuntu1804: ami-013395e82478747ce
