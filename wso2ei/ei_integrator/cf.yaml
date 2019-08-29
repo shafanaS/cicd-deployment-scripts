@@ -61,7 +61,10 @@ Resources:
     Type: AWS::IAM::Role
     Description: IAM Instance role to read AWS resource to discover instances to monitor
     Properties:
-      RoleName: MonitoringInstanceIAMRoleProd
+      RoleName: !Join
+        - '-'
+        - - !Ref 'AWS::Region'
+          - 'MonitoringInstanceIAMRoleProd'
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -487,7 +490,7 @@ Resources:
           Value: ei
           PropagateAtLaunch: 'true'
         - Key: Environment
-          Value: Dev
+          Value: Prod
           PropagateAtLaunch: 'true'
         - Key: ServerType
           Value: 'WSO2'
@@ -524,7 +527,25 @@ Resources:
         - !Ref WSO2EISecurityGroupProd
       UserData: !Base64
         'Fn::Sub': |
-          #cloud-boothook
+          Content-Type: multipart/mixed; boundary="//"
+          MIME-Version: 1.0
+
+          --//
+          Content-Type: text/cloud-config; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="cloud-config.txt"
+
+          #cloud-config
+          cloud_final_modules:
+          - [scripts-user, always]
+
+          --//
+          Content-Type: text/x-shellscript; charset="us-ascii"
+          MIME-Version: 1.0
+          Content-Transfer-Encoding: 7bit
+          Content-Disposition: attachment; filename="userdata.txt"
+
           #!/bin/bash
           export PATH=~/.local/bin:$PATH
           apt-get update
@@ -586,7 +607,7 @@ Resources:
           Value: ei
           PropagateAtLaunch: 'true'
         - Key: Environment
-          Value: Dev
+          Value: Prod
           PropagateAtLaunch: 'true'
         - Key: ServerType
           Value: 'WSO2'
@@ -917,7 +938,7 @@ Outputs:
           - WSO2EILoadBalancerProd
           - DNSName
         - ':8280'
-    Description: ESB HTTP URL
+    Description: ESB HTTP Gateway URL
   ESBHttpsUrl:
     Value: !Join
       - ''
@@ -926,7 +947,7 @@ Outputs:
           - WSO2EILoadBalancerProd
           - DNSName
         - ':8243'
-    Description: ESB HTTPSURL
+    Description: ESB HTTPS Gateway URL
   MonitoringHttpUrl:
     Value: !Join
       - ''
@@ -995,11 +1016,15 @@ Parameters:
 Mappings:
   WSO2MonitorMasterAMIRegionMap:
     us-east-1:
-      Ubuntu1804: ami-0ca663a3c8ebd88d3
+      Ubuntu1804: ami-0f9800322e816f39e
     us-east-2:
-      Ubuntu1804: ami-0ca853307dbe2b2d7
+      Ubuntu1804: ami-0d8a95ba424b52885
+    us-west-1:
+      Ubuntu1804: ami-0b1a16521c4b5dee8
   WSO2LoggingMasterAMIRegionMap:
     us-east-1:
-      Ubuntu1804: ami-0d0b6efe5cd67392b
+      Ubuntu1804: ami-0820cde1afa9bdc7a
     us-east-2:
-      Ubuntu1804: ami-013395e82478747ce
+      Ubuntu1804: ami-063c7ff0a6b1fb4c5
+    us-west-1:
+      Ubuntu1804: ami-0d39a26f7914201c5
