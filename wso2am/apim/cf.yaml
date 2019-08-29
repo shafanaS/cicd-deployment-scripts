@@ -61,7 +61,10 @@ Resources:
     Type: AWS::IAM::Role
     Description: IAM Instance role to read AWS resource to discover instances to monitor
     Properties:
-      RoleName: MonitoringInstanceIAMRoleProd
+      RoleName: !Join
+        - '-'
+        - - !Ref 'AWS::Region'
+          - 'MonitoringInstanceIAMRoleProd'
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -189,7 +192,7 @@ Resources:
     Type: 'AWS::EC2::EIPAssociation'
     Properties:
       AllocationId: !GetAtt WSO2BastionEIP.AllocationId
-      InstanceId: !Ref WSO2BastionInstance
+      InstanceId: !Ref WSO2BastionInstanceProd
   WSO2APIMEIP:
     Type: 'AWS::EC2::EIP'
     Properties:
@@ -637,7 +640,7 @@ Resources:
               wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
               if [ $? -eq "0" ] ; then
                 sleep 30
-                /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2APIMNode1AutoScalingGroup --region ${AWS::Region}
+                /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2APIMNode2AutoScalingGroup --region ${AWS::Region}
               fi
           done
     DependsOn:
@@ -685,7 +688,7 @@ Resources:
           - AlarmNotification
         WaitOnResourceSignals: true
     DependsOn:
-      - WSO2APIMLoadBalancer
+      - WSO2APIMLoadBalancerProd
   WSO2APIMLoadBalancerSecurityGroupProd:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
@@ -744,7 +747,7 @@ Resources:
   WSO2APIMLoadBalancerProd:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Name: APIM
+      Name: APIM-prod
       Scheme: internet-facing
       Subnets:
         - !Ref WSO2APIMPublicSubnet1
@@ -762,7 +765,7 @@ Resources:
       HealthCheckPort: 9443
       Matcher:
         HttpCode: 200
-      Name: apim-carbon-9443
+      Name: apim-carbon-prod-9443
       Port: 9443
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -787,7 +790,7 @@ Resources:
       HealthCheckPort: 8243
       Matcher:
         HttpCode: 200
-      Name: apim-carbon-8243
+      Name: apim-carbon-prod-8243
       Port: 8243
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -820,7 +823,7 @@ Resources:
       Protocol: HTTPS
       SslPolicy: ELBSecurityPolicy-TLS-1-1-2017-01
     DependsOn:
-      - WSO2APIMLoadBalancerSecurityGroup
+      - WSO2APIMLoadBalancerSecurityGroupProd
   WSO2APIMALB8243ListenerProd:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -860,7 +863,7 @@ Resources:
       Protocol: HTTPS
       SslPolicy: ELBSecurityPolicy-TLS-1-1-2017-01
     DependsOn:
-      - WSO2APIMLoadBalancerSecurityGroup
+      - WSO2APIMLoadBalancerSecurityGroupProd
   MonitoringInstanceProd:
     Type: 'AWS::EC2::Instance'
     Properties:
@@ -1022,6 +1025,14 @@ Outputs:
           - DNSName
         - ':8280'
     Description: APIM HTTP Gateway endpoint
+  MonitoringHttpUrl:
+    Value: !Join
+      - ''
+      - - 'http://'
+        - !GetAtt
+          - MonitoringInstanceProd
+          - PublicDnsName
+        - ':3000/d/dxHncuHS/'
   LoggingHttpUrl:
     Value: !Join
       - ''

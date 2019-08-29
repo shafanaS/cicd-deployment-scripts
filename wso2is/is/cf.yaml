@@ -61,7 +61,10 @@ Resources:
     Type: AWS::IAM::Role
     Description: IAM Instance role to read AWS resource to discover instances to monitor
     Properties:
-      RoleName: MonitoringInstanceIAMRoleProd
+      RoleName: !Join
+        - '-'
+        - - !Ref 'AWS::Region'
+          - 'MonitoringInstanceIAMRoleProd'
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -925,7 +928,7 @@ Outputs:
           - DNSName
         - '/services'
     Description: Carbon Server URL
-  ISHttpUrl:
+  ESBHttpUrl:
     Value: !Join
     - ''
     - - 'https://'
@@ -934,7 +937,7 @@ Outputs:
         - DNSName
       - '/carbon'
     Description: IS HTTP Gateway URL
-  ISHttpsUrl:
+  ESBHttpsUrl:
     Value: !Join
       - ''
       - - 'https://'

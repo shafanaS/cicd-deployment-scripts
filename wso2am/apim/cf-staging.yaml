@@ -473,6 +473,10 @@ Resources:
         - Key: cluster
           Value: apim
           PropagateAtLaunch: 'true'
+    CreationPolicy:
+      ResourceSignal:
+        Count: 1
+        Timeout: PT20M
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MaxBatchSize: '2'
@@ -592,6 +596,10 @@ Resources:
         - Key: Name
           Value: WSO2APIMInstance2
           PropagateAtLaunch: 'true'
+    CreationPolicy:
+      ResourceSignal:
+        Count: 1
+        Timeout: PT20M
     UpdatePolicy:
       AutoScalingRollingUpdate:
         MaxBatchSize: '2'

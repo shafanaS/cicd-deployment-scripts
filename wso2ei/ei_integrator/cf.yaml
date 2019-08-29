@@ -61,7 +61,10 @@ Resources:
     Type: AWS::IAM::Role
     Description: IAM Instance role to read AWS resource to discover instances to monitor
     Properties:
-      RoleName: MonitoringInstanceIAMRoleProd
+      RoleName: !Join
+        - '-'
+        - - !Ref 'AWS::Region'
+          - 'MonitoringInstanceIAMRoleProd'
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
