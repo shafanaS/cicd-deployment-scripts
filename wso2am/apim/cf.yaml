@@ -1033,6 +1033,7 @@ Outputs:
           - MonitoringInstanceProd
           - PublicDnsName
         - ':3000/d/dxHncuHS/'
+    Description: Monitoring HTTP URL
   LoggingHttpUrl:
     Value: !Join
       - ''
