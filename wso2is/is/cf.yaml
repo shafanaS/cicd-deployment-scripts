@@ -35,6 +35,10 @@ Metadata:
           - DBUsername
           - DBPassword
           - DBType
+      - Label:
+          default: Environment Configurations
+          Parameters:
+            - Environment
     ParameterLabels:
       AWSAccessKeyId:
         default: AWS Access Key ID
@@ -56,6 +60,8 @@ Metadata:
         default: Product
       Version:
         default: Version
+      Environment:
+        default: Environment
 Resources:
   MonitoringInstanceIAMRoleProd:
     Type: AWS::IAM::Role
@@ -439,10 +445,10 @@ Resources:
           unzip /home/wso2user/${Product}-${Version}.zip -d /home/wso2user/
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
-          sed -i "s/IS_ALB_DNS_NAME/${WSO2ISLoadBalancerProd.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/carbon.xml
+          sed -i "s/ALB_DNS_NAME/${WSO2ISLoadBalancerProd.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/carbon.xml
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
-          sed -i "s/IS_RDS_DNS_NAME/${WSO2ISDBInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
+          sed -i "s/RDS_DNS_NAME/${WSO2ISDBInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
@@ -555,10 +561,10 @@ Resources:
           unzip /home/wso2user/${Product}-${Version}.zip -d /home/wso2user/
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
-          sed -i "s/IS_ALB_DNS_NAME/${WSO2ISLoadBalancerProd.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/carbon.xml
+          sed -i "s/ALB_DNS_NAME/${WSO2ISLoadBalancerProd.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/carbon.xml
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
-          sed -i "s/IS_RDS_DNS_NAME/${WSO2ISDBInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
+          sed -i "s/RDS_DNS_NAME/${WSO2ISDBInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
@@ -1010,6 +1016,8 @@ Parameters:
   Product:
     Type: String
   Version:
+    Type: String
+  Environment:
     Type: String
 Mappings:
   WSO2MonitorMasterAMIRegionMap:
