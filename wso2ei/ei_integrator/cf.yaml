@@ -35,6 +35,10 @@ Metadata:
           - DBUsername
           - DBPassword
           - DBType
+      - Label:
+          default: Environment Configurations
+          Parameters:
+            - Environment
     ParameterLabels:
       AWSAccessKeyId:
         default: AWS Access Key ID
@@ -56,6 +60,8 @@ Metadata:
         default: Product
       Version:
         default: Version
+      Environment:
+        default: Environment
 Resources:
   MonitoringInstanceIAMRoleProd:
     Type: AWS::IAM::Role
@@ -440,10 +446,10 @@ Resources:
           cp /home/wso2user/endpointCars/*_production*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
-          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancerProd.DNSName}/g" /home/wso2user/${Product}-${Version}/conf/carbon.xml
+          sed -i "s/ALB_DNS_NAME/${WSO2EILoadBalancerProd.DNSName}/g" /home/wso2user/${Product}-${Version}/conf/carbon.xml
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/wso2user/${Product}-${Version}/conf/datasources/master-datasources.xml
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/wso2user/${Product}-${Version}/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
@@ -557,10 +563,10 @@ Resources:
           cp /home/wso2user/endpointCars/*_production*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
-          sed -i "s/EI_ALB_DNS_NAME/${WSO2EILoadBalancerProd.DNSName}/g" /home/wso2user/${Product}-${Version}/conf/carbon.xml
+          sed -i "s/ALB_DNS_NAME/${WSO2EILoadBalancerProd.DNSName}/g" /home/wso2user/${Product}-${Version}/conf/carbon.xml
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/wso2user/${Product}-${Version}/conf/datasources/master-datasources.xml
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/wso2user/${Product}-${Version}/conf/datasources/master-datasources.xml
-          sed -i "s/EI_RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/conf/datasources/master-datasources.xml
+          sed -i "s/RDS_DNS_NAME/${WSO2EIDBInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/conf/datasources/master-datasources.xml
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
@@ -1013,6 +1019,8 @@ Parameters:
     Type: String
   Version:
     Type: String
+  Environment:
+    Type: String
 Mappings:
   WSO2MonitorMasterAMIRegionMap:
     us-east-1:
@@ -1023,7 +1031,7 @@ Mappings:
       Ubuntu1804: ami-0b1a16521c4b5dee8
   WSO2LoggingMasterAMIRegionMap:
     us-east-1:
-      Ubuntu1804: ami-089c43fe12d048b25
+      Ubuntu1804: ami-0820cde1afa9bdc7a
     us-east-2:
       Ubuntu1804: ami-0b382084a3cc80fb7
     us-west-1:
