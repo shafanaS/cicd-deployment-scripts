@@ -926,16 +926,7 @@ Outputs:
           - WSO2EILoadBalancerProd
           - DNSName
         - '/carbon'
-    Description: Integrator Carbon Management Console URL
-  CarbonServerUrl:
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt
-          - WSO2EILoadBalancerProd
-          - DNSName
-        - '/services'
-    Description: Carbon Server URL
+    Description: Enterprise Integrator Management Console URL
   ESBHttpUrl:
     Value: !Join
       - ''
@@ -944,7 +935,7 @@ Outputs:
           - WSO2EILoadBalancerProd
           - DNSName
         - ':8280'
-    Description: ESB HTTP Gateway URL
+    Description: EI HTTP Gateway endpoint
   ESBHttpsUrl:
     Value: !Join
       - ''
@@ -953,8 +944,8 @@ Outputs:
           - WSO2EILoadBalancerProd
           - DNSName
         - ':8243'
-    Description: ESB HTTPS Gateway URL
-  MonitoringHttpUrl:
+    Description: EI HTTPS Gateway endpoint
+  MonitoringUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -962,8 +953,8 @@ Outputs:
           - MonitoringInstanceProd
           - PublicDnsName
         - ':3000/d/dxHncuHS/'
-    Description: Monitoring HTTP URL
-  LoggingHttpUrl:
+    Description: Grafana Dashboard URL
+  KibanaUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -971,7 +962,7 @@ Outputs:
           - LoggingInstanceProd
           - PublicDnsName
         - ':5601'
-    Description: Logging HTTP URL
+    Description: Kibana Dashboard URL
 Parameters:
   AWSAccessKeyId:
     Type: String

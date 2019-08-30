@@ -576,7 +576,7 @@ Resources:
               wget --delete-after --server-response --no-check-certificate "https://localhost:9443/carbon/admin/login.jsp"
               if [ $? -eq "0" ] ; then
                 sleep 30
-                /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2APIMNode1AutoScalingGroup --region ${AWS::Region}
+                /usr/local/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource WSO2APIMNode2AutoScalingGroup --region ${AWS::Region}
               fi
           done
     DependsOn:
@@ -843,16 +843,7 @@ Outputs:
           - WSO2APIMLoadBalancer
           - DNSName
         - '/carbon'
-    Description: APIM service carbon URL
-  CarbonServerUrl:
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt
-          - WSO2APIMLoadBalancer
-          - DNSName
-        - '/services/'
-    Description: APIM service carbon URL
+    Description: APIM Management Console URL
   PublisherUrl:
     Value: !Join
       - ''
@@ -880,16 +871,7 @@ Outputs:
           - DNSName
         - '/admin'
     Description: APIM service admin URL
-  KeyManagerUrl:
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt
-          - WSO2APIMLoadBalancer
-          - DNSName
-        - '/services/'
-    Description: APIM keymanager service admin URL
-  GatewayHttpsUrl:
+  ESBHttpsUrl:
     Value: !Join
       - ''
       - - 'https://'
@@ -898,7 +880,7 @@ Outputs:
           - DNSName
         - ':8243'
     Description: APIM HTTPS Gateway endpoint
-  GatewayHttpUrl:
+  ESBHttpUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -907,7 +889,7 @@ Outputs:
           - DNSName
         - ':8280'
     Description: APIM HTTP Gateway endpoint
-  LoggingHttpUrl:
+  KibanaUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -915,7 +897,7 @@ Outputs:
           - LoggingInstance
           - PublicDnsName
         - ':5601'
-    Description: Logging HTTP URL
+    Description: Kibana Dashboard URL
 Parameters:
   AWSAccessKeyId:
     Type: String

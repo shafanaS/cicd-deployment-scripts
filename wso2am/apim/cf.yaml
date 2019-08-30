@@ -967,16 +967,7 @@ Outputs:
           - WSO2APIMLoadBalancerProd
           - DNSName
         - '/carbon'
-    Description: APIM service carbon URL
-  CarbonServerUrl:
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt
-          - WSO2APIMLoadBalancerProd
-          - DNSName
-        - '/services/'
-    Description: APIM service carbon URL
+    Description: APIM Management Console URL
   PublisherUrl:
     Value: !Join
       - ''
@@ -1004,16 +995,7 @@ Outputs:
           - DNSName
         - '/admin'
     Description: APIM service admin URL
-  KeyManagerUrl:
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt
-          - WSO2APIMLoadBalancerProd
-          - DNSName
-        - '/services/'
-    Description: APIM keymanager service admin URL
-  GatewayHttpsUrl:
+  ESBHttpsUrl:
     Value: !Join
       - ''
       - - 'https://'
@@ -1022,7 +1004,7 @@ Outputs:
           - DNSName
         - ':8243'
     Description: APIM HTTPS Gateway endpoint
-  GatewayHttpUrl:
+  ESBHttpUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -1031,7 +1013,7 @@ Outputs:
           - DNSName
         - ':8280'
     Description: APIM HTTP Gateway endpoint
-  MonitoringHttpUrl:
+  MonitoringUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -1039,8 +1021,8 @@ Outputs:
           - MonitoringInstanceProd
           - PublicDnsName
         - ':3000/d/dxHncuHS/'
-    Description: Monitoring HTTP URL
-  LoggingHttpUrl:
+    Description: Grafana Dashboard URL
+  KibanaUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -1048,7 +1030,7 @@ Outputs:
           - LoggingInstanceProd
           - PublicDnsName
         - ':5601'
-    Description: Logging HTTP URL
+    Description: Kibana Dashboard URL
 Parameters:
   AWSAccessKeyId:
     Type: String

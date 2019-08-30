@@ -925,15 +925,6 @@ Outputs:
           - DNSName
         - '/carbon'
     Description: Identity Server Management Console URL
-  CarbonServerUrl:
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt
-          - WSO2ISLoadBalancerProd
-          - DNSName
-        - '/services'
-    Description: Carbon Server URL
   ESBHttpUrl:
     Value: !Join
     - ''
@@ -951,8 +942,8 @@ Outputs:
           - WSO2ISLoadBalancerProd
           - DNSName
         - ':8243'
-    Description: IS HTTPS Gateway URL
-  MonitoringHttpUrl:
+    Description: IS HTTPS Gateway endpoint
+  MonitoringUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -960,8 +951,8 @@ Outputs:
           - MonitoringInstanceProd
           - PublicDnsName
         - ':3000/d/dxHncuHS/'
-    Description: Monitoring HTTP URL
-  LoggingHttpUrl:
+    Description: Grafana Dashboard endpoint
+  KibanaUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -969,7 +960,7 @@ Outputs:
           - LoggingInstanceProd
           - PublicDnsName
         - ':5601'
-    Description: Logging HTTP URL
+    Description: Kibana Dashboard URL
 Parameters:
   AWSAccessKeyId:
     Type: String
