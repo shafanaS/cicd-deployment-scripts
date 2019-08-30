@@ -802,15 +802,6 @@ Outputs:
           - DNSName
         - '/carbon'
     Description: Identity Server Management Console URL
-  CarbonServerUrl:
-    Value: !Join
-      - ''
-      - - 'https://'
-        - !GetAtt
-          - WSO2ISLoadBalancer
-          - DNSName
-        - '/services'
-    Description: Carbon Server URL
   ESBHttpUrl:
     Value: !Join
     - ''
@@ -819,7 +810,7 @@ Outputs:
         - WSO2ISLoadBalancer
         - DNSName
       - '/carbon'
-    Description: IS HTTP Gateway URL
+    Description: IS HTTP Gateway endpoint
   ESBHttpsUrl:
     Value: !Join
       - ''
@@ -828,8 +819,8 @@ Outputs:
           - WSO2ISLoadBalancer
           - DNSName
         - ':8243'
-    Description: IS HTTPS Gateway URL
-  LoggingHttpUrl:
+    Description: IS HTTPS Gateway endpoint
+  KibanaUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -837,7 +828,7 @@ Outputs:
           - LoggingInstance
           - PublicDnsName
         - ':5601'
-    Description: Logging HTTP URL
+    Description: Kibana Dashboard URL
 Parameters:
   AWSAccessKeyId:
     Type: String
