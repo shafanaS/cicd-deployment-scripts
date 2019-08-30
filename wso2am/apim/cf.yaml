@@ -1033,6 +1033,7 @@ Outputs:
           - MonitoringInstanceProd
           - PublicDnsName
         - ':3000/d/dxHncuHS/'
+    Description: Monitoring HTTP URL
   LoggingHttpUrl:
     Value: !Join
       - ''
@@ -1099,8 +1100,8 @@ Mappings:
       Ubuntu1804: ami-0b1a16521c4b5dee8
   WSO2LoggingMasterAMIRegionMap:
     us-east-1:
-      Ubuntu1804: ami-0820cde1afa9bdc7a
+      Ubuntu1804: ami-089c43fe12d048b25
     us-east-2:
-      Ubuntu1804: ami-063c7ff0a6b1fb4c5
+      Ubuntu1804: ami-0b382084a3cc80fb7
     us-west-1:
-      Ubuntu1804: ami-0d39a26f7914201c5
+      Ubuntu1804: ami-0b6d9c2c447ab4299
