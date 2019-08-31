@@ -474,7 +474,7 @@ Resources:
         - !Ref WSO2APIMPrivateSubnet1
       Tags:
         - Key: Name
-          Value: WSO2APIMInstance1
+          Value: WSO2APIMInstance1Staging
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: apim
@@ -600,7 +600,7 @@ Resources:
         - !Ref WSO2APIMPrivateSubnet2
       Tags:
         - Key: Name
-          Value: WSO2APIMInstance2
+          Value: WSO2APIMInstance2Staging
           PropagateAtLaunch: 'true'
     CreationPolicy:
       ResourceSignal:
@@ -692,7 +692,7 @@ Resources:
       HealthCheckPort: 9443
       Matcher:
         HttpCode: 200
-      Name: apim-carbon-9443
+      Name: apim-carbon-staging-9443
       Port: 9443
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -717,7 +717,7 @@ Resources:
       HealthCheckPort: 8243
       Matcher:
         HttpCode: 200
-      Name: apim-carbon-8243
+      Name: apim-carbon-staging-8243
       Port: 8243
       Protocol: HTTPS
       TargetGroupAttributes:

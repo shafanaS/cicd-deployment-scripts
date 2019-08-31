@@ -424,7 +424,7 @@ Resources:
         - !Ref WSO2ISPrivateSubnet1
       Tags:
         - Key: Name
-          Value: WSO2ISInstance1
+          Value: WSO2ISInstance1Staging
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: is
@@ -533,7 +533,7 @@ Resources:
         - !Ref WSO2ISPrivateSubnet2
       Tags:
         - Key: Name
-          Value: WSO2ISInstance2
+          Value: WSO2ISInstance2Staging
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: is
@@ -636,7 +636,7 @@ Resources:
       HealthCheckPort: 9443
       Matcher:
         HttpCode: 200
-      Name: is-carbon-9443
+      Name: is-carbon-staging-9443
       Port: 9443
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -661,7 +661,7 @@ Resources:
       HealthCheckPort: 8243
       Matcher:
         HttpCode: 200
-      Name: is-carbon-8243
+      Name: is-carbon-staging-8243
       Port: 8243
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -686,7 +686,7 @@ Resources:
       HealthCheckPort: 8280
       Matcher:
         HttpCode: 200
-      Name: is-carbon-8280
+      Name: is-carbon-staging-8280
       Port: 8280
       Protocol: HTTP
       TargetGroupAttributes:
