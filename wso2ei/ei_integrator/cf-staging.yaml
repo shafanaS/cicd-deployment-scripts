@@ -425,7 +425,7 @@ Resources:
         - !Ref WSO2EIPrivateSubnet1
       Tags:
         - Key: Name
-          Value: WSO2EIInstance1
+          Value: WSO2EIInstance1Staging
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: ei
@@ -535,7 +535,7 @@ Resources:
         - !Ref WSO2EIPrivateSubnet2
       Tags:
         - Key: Name
-          Value: WSO2EIInstance2
+          Value: WSO2EIInstance2Staging
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: ei
@@ -639,7 +639,7 @@ Resources:
       HealthCheckPort: 9443
       Matcher:
         HttpCode: 200
-      Name: ei-carbon-9443
+      Name: ei-carbon-staging-9443
       Port: 9443
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -664,7 +664,7 @@ Resources:
       HealthCheckPort: 8243
       Matcher:
         HttpCode: 200
-      Name: ei-carbon-8243
+      Name: ei-carbon-staging-8243
       Port: 8243
       Protocol: HTTPS
       TargetGroupAttributes:
@@ -689,7 +689,7 @@ Resources:
       HealthCheckPort: 8280
       Matcher:
         HttpCode: 200
-      Name: ei-carbon-8280
+      Name: ei-carbon-staging-8280
       Port: 8280
       Protocol: HTTP
       TargetGroupAttributes:
