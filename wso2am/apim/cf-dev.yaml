@@ -902,12 +902,12 @@ Outputs:
   AdminUrl:
     Value: !Join
       - ''
-      - - 'http://'
+      - - 'https://'
         - !GetAtt
           - WSO2LoadBalancer
           - DNSName
-        - ':8280'
-    Description: ESB HTTP Gateway endpoint
+        - '/admin'
+    Description: APIM service admin URL
   ESBHttpsUrl:
     Value: !Join
       - ''
