@@ -918,13 +918,6 @@ Parameters:
   Environment:
     Type: String
 Mappings:
-  WSO2MonitorMasterAMIRegionMap:
-    us-east-1:
-      Ubuntu1804: ami-0f9800322e816f39e
-    us-east-2:
-      Ubuntu1804: ami-0d8a95ba424b52885
-    us-west-1:
-      Ubuntu1804: ami-0b1a16521c4b5dee8
   WSO2LoggingMasterAMIRegionMap:
     us-east-1:
       Ubuntu1804: ami-089c43fe12d048b25
