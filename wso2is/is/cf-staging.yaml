@@ -419,7 +419,6 @@ Resources:
       TargetGroupARNs:
         - !Ref WSO2ISALBTargetGroup
         - !Ref WSO2IS8243ALBTargetGroup
-        - !Ref WSO2ISServicesALBTargetGroup
       VPCZoneIdentifier:
         - !Ref WSO2ISPrivateSubnet1
       Tags:
@@ -528,7 +527,6 @@ Resources:
       TargetGroupARNs:
         - !Ref WSO2ISALBTargetGroup
         - !Ref WSO2IS8243ALBTargetGroup
-        - !Ref WSO2ISServicesALBTargetGroup
       VPCZoneIdentifier:
         - !Ref WSO2ISPrivateSubnet2
       Tags:
