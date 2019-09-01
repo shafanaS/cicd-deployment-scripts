@@ -425,6 +425,7 @@ Resources:
       TargetGroupARNs:
         - !Ref WSO2ALBTargetGroup
         - !Ref WSO28243ALBTargetGroup
+        - !Ref WSO2ServicesALBTargetGroup
       VPCZoneIdentifier:
         - !Ref WSO2PrivateSubnet1
       Tags:
@@ -538,6 +539,7 @@ Resources:
       TargetGroupARNs:
         - !Ref WSO2ALBTargetGroup
         - !Ref WSO28243ALBTargetGroup
+        - !Ref WSO2ServicesALBTargetGroup
       VPCZoneIdentifier:
         - !Ref WSO2PrivateSubnet2
       Tags:
@@ -673,6 +675,37 @@ Resources:
           Value: !Join
             - ''
             - - !Ref Product
+  WSO2ServicesALBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 10
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 4
+      HealthCheckPath: /
+      HealthCheckPort: 8280
+      Matcher:
+        HttpCode: 200
+      Name: !Join
+        - '-'
+        - - 'carbon'
+          - !Ref Environment
+          - '8280'
+      Port: 8280
+      Protocol: HTTP
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: '20'
+        - Key: stickiness.enabled
+          Value: 'true'
+      UnhealthyThresholdCount: 3
+      VpcId:
+        Ref: WSO2VPC
+      Tags:
+        - Key: Name
+          Value: !Join
+            - ''
+            - - !Ref Product
   WSO28243ALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -724,6 +757,15 @@ Resources:
       SslPolicy: ELBSecurityPolicy-TLS-1-1-2017-01
     DependsOn:
       - WSO2LoadBalancerSecurityGroup
+  WSO2ServicesALBListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref WSO2ServicesALBTargetGroup
+      LoadBalancerArn: !Ref WSO2LoadBalancer
+      Port: 8280
+      Protocol: HTTP
   WSO28243ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
@@ -803,11 +845,11 @@ Outputs:
   ESBHttpUrl:
     Value: !Join
       - ''
-      - - 'https://'
+      - - 'http://'
         - !GetAtt
           - WSO2LoadBalancer
           - DNSName
-        - '/carbon'
+        - ':8280'
     Description: ESB HTTP Gateway endpoint
   ESBHttpsUrl:
     Value: !Join
