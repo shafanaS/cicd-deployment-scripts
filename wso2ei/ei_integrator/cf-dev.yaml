@@ -570,6 +570,7 @@ Resources:
         WaitOnResourceSignals: true
     DependsOn:
       - WSO2LoadBalancer
+      - WSO2Node1AutoScalingGroup
   WSO2LoadBalancerSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
