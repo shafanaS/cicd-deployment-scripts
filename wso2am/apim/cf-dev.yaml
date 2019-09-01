@@ -225,7 +225,7 @@ Resources:
     Type: 'AWS::EFS::MountTarget'
     Properties:
       SubnetId: !Ref WSO2PrivateSubnet2
-      FileSystemId: !Ref WSO2AEFSFileSystem
+      FileSystemId: !Ref WSO2EFSFileSystem
       SecurityGroups:
         - !Ref WSO2EFSSecurityGroup
   # Product configurations
@@ -467,7 +467,6 @@ Resources:
       TargetGroupARNs:
         - !Ref WSO2ALBTargetGroup
         - !Ref WSO28243ALBTargetGroup
-        - !Ref WSO2ServicesALBTargetGroup
       VPCZoneIdentifier:
         - !Ref WSO2PrivateSubnet1
       Tags:
@@ -598,7 +597,6 @@ Resources:
       TargetGroupARNs:
         - !Ref WSO2ALBTargetGroup
         - !Ref WSO28243ALBTargetGroup
-        - !Ref WSO2ServicesALBTargetGroup
       VPCZoneIdentifier:
         - !Ref WSO2PrivateSubnet2
       Tags:
