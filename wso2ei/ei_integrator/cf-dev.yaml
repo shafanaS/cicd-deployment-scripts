@@ -292,7 +292,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join
-            - '-'
+            - ''
             - - 'WSO2BastionInstance'
               - !Ref Environment
       NetworkInterfaces:
@@ -432,7 +432,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join
-            - '-'
+            - ''
             - - 'WSO2Instance1'
               - !Ref Environment
           PropagateAtLaunch: 'true'
@@ -547,7 +547,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join
-            - '-'
+            - ''
             - - 'WSO2Instance2'
               - !Ref Environment
           PropagateAtLaunch: 'true'
@@ -638,7 +638,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Name: !Join
-        - '-'
+        - ''
         - - 'WSO2LoadBalancer'
           - !Ref Environment
       Scheme: internet-facing
@@ -810,7 +810,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join
-            - '-'
+            - ''
             - - 'WSO2LoggingInstance'
               - !Ref Environment
       NetworkInterfaces:

@@ -182,7 +182,7 @@ Resources:
       AllocatedStorage: 5
       BackupRetentionPeriod: '0'
       DBInstanceIdentifier: !Join
-        - '-'
+        - ''
         - - 'WSO2DBInstance'
           - !Ref Environment
       DBName: WSO2_DB
@@ -473,7 +473,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join
-            - '-'
+            - ''
             - - 'WSO2Instance1'
               - !Ref Environment
           PropagateAtLaunch: 'true'
@@ -604,7 +604,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join
-            - '-'
+            - ''
             - - 'WSO2Instance2'
               - !Ref Environment
           PropagateAtLaunch: 'true'
@@ -694,7 +694,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Name: !Join
-        - '-'
+        - ''
         - - 'WSO2LoadBalancer'
           - !Ref Environment
       Scheme: internet-facing
