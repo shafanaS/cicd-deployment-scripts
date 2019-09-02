@@ -802,7 +802,7 @@ Outputs:
           - DNSName
         - '/carbon'
     Description: Identity Server Management Console URL
-  ESBHttpUrl:
+  ISHttpUrl:
     Value: !Join
     - ''
     - - 'http://'
@@ -811,7 +811,7 @@ Outputs:
         - DNSName
       - ':8280'
     Description: IS HTTP Gateway endpoint
-  ESBHttpsUrl:
+  ISHttpsUrl:
     Value: !Join
       - ''
       - - 'https://'
