@@ -805,7 +805,7 @@ Outputs:
           - DNSName
         - '/carbon'
     Description: Enterprise Integrator Management Console URL
-  ESBHttpUrl:
+  HttpUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -814,7 +814,7 @@ Outputs:
           - DNSName
         - ':8280'
     Description: EI HTTP Gateway endpoint
-  ESBHttpsUrl:
+  HttpsUrl:
     Value: !Join
       - ''
       - - 'https://'

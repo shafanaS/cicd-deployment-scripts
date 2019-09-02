@@ -845,7 +845,7 @@ Outputs:
           - DNSName
         - '/carbon'
     Description: Management Console URL
-  ESBHttpUrl:
+  HttpUrl:
     Value: !Join
       - ''
       - - 'http://'
@@ -854,7 +854,7 @@ Outputs:
           - DNSName
         - ':8280'
     Description: ESB HTTP Gateway endpoint
-  ESBHttpsUrl:
+  HttpsUrl:
     Value: !Join
       - ''
       - - 'https://'

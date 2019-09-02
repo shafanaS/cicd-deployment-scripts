@@ -871,7 +871,7 @@ Outputs:
           - DNSName
         - '/admin'
     Description: APIM service admin URL
-  APIMHttpsUrl:
+  HttpsUrl:
     Value: !Join
       - ''
       - - 'https://'
@@ -880,7 +880,7 @@ Outputs:
           - DNSName
         - ':8243'
     Description: APIM HTTPS Gateway endpoint
-  APIMHttpUrl:
+  HttpUrl:
     Value: !Join
       - ''
       - - 'http://'
