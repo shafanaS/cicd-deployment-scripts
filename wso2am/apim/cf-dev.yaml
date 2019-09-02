@@ -225,7 +225,7 @@ Resources:
     Type: 'AWS::EFS::MountTarget'
     Properties:
       SubnetId: !Ref WSO2PrivateSubnet2
-      FileSystemId: !Ref WSO2AEFSFileSystem
+      FileSystemId: !Ref WSO2EFSFileSystem
       SecurityGroups:
         - !Ref WSO2EFSSecurityGroup
   # Product configurations
@@ -418,7 +418,7 @@ Resources:
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
-          export LogserverIP=${WSO2LoggingInstance.PrivateIp}
+          export LogserverIP=${LoggingInstanceDev.PrivateIp}
           echo "$LogserverIP logserver" >> /etc/hosts
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           export INSTANCEID=$(ec2metadata | grep -m 1 'instance-id:' | awk '{print $2}')
@@ -456,7 +456,7 @@ Resources:
       - WSO2VPCInternetGatewayAttachment
       - WSO2DBInstance
       - WSO2BastionInstance
-      - WSO2LoggingInstance
+      - LoggingInstanceDev
   WSO2Node1AutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
@@ -467,7 +467,6 @@ Resources:
       TargetGroupARNs:
         - !Ref WSO2ALBTargetGroup
         - !Ref WSO28243ALBTargetGroup
-        - !Ref WSO2ServicesALBTargetGroup
       VPCZoneIdentifier:
         - !Ref WSO2PrivateSubnet1
       Tags:
@@ -549,7 +548,7 @@ Resources:
           sed -i "s^SECRET_KEY^${AWSAccessKeySecret}^g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           tar -xvf /opt/OpenJDK8U-jdk_8u222_linux_x64.tar.gz -C /opt/
           export PRIVATE_IP=$(ifconfig | grep -m 1 'inet ' | awk '{print $2}')
-          export LogserverIP=${WSO2LoggingInstance.PrivateIp}
+          export LogserverIP=${LoggingInstanceDev.PrivateIp}
           echo "$LogserverIP logserver" >> /etc/hosts
           sed -i "s/LOCAL-MEMBER-HOST/$PRIVATE_IP/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           export INSTANCEID=$(ec2metadata | grep -m 1 'instance-id:' | awk '{print $2}')
@@ -587,7 +586,7 @@ Resources:
       - WSO2VPCInternetGatewayAttachment
       - WSO2DBInstance
       - WSO2BastionInstance
-      - WSO2LoggingInstance
+      - LoggingInstanceDev
   WSO2Node2AutoScalingGroup:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
     Properties:
@@ -598,7 +597,6 @@ Resources:
       TargetGroupARNs:
         - !Ref WSO2ALBTargetGroup
         - !Ref WSO28243ALBTargetGroup
-        - !Ref WSO2ServicesALBTargetGroup
       VPCZoneIdentifier:
         - !Ref WSO2PrivateSubnet2
       Tags:
@@ -825,7 +823,7 @@ Resources:
       SslPolicy: ELBSecurityPolicy-TLS-1-1-2017-01
     DependsOn:
       - WSO2LoadBalancerSecurityGroup
-  LoggingInstance:
+  LoggingInstanceDev:
     Type: 'AWS::EC2::Instance'
     Properties:
       DisableApiTermination: 'false'
@@ -847,7 +845,7 @@ Resources:
         - Key: Name
           Value: !Join
             - '-'
-            - - 'WSO2LoggingInstance'
+            - - 'WSO2LoggingInstanceDev'
               - !Ref Environment
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
@@ -931,7 +929,7 @@ Outputs:
       - ''
       - - 'http://'
         - !GetAtt
-          - WSO2LoggingInstance
+          - LoggingInstanceDev
           - PublicDnsName
         - ':5601'
     Description: Kibana Dashboard URL
