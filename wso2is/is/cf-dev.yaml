@@ -635,7 +635,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Name: !Join
-        - '-'
+        - ''
         - - 'WSO2LoadBalancer'
           - !Ref Environment
       Scheme: internet-facing
