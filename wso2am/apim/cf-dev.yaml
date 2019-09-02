@@ -841,7 +841,7 @@ Resources:
         - Key: Name
           Value: !Join
             - '-'
-            - - 'WSO2LoggingInstanceDev'
+            - - 'WSO2LoggingInstance'
               - !Ref Environment
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
