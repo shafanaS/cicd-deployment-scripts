@@ -834,7 +834,7 @@ Resources:
       - WSO2VPCInternetGatewayAttachment
       - WSO2DBInstance
 Outputs:
-  MgtConsoleUrl:
+  ConsoleURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -842,17 +842,17 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - '/carbon'
-    Description: Management Console URL
-  HttpUrl:
+    Description: WSO2 Identity Server Management Console URL
+  HttpURL:
     Value: !Join
-      - ''
-      - - 'http://'
-        - !GetAtt
-          - WSO2LoadBalancer
-          - DNSName
-        - ':8280'
-    Description: ESB HTTP Gateway endpoint
-  HttpsUrl:
+    - ''
+    - - 'http://'
+      - !GetAtt
+        - WSO2LoadBalancer
+        - DNSName
+      - ':8280'
+    Description: WSO2 Identity Server HTTP Gateway endpoint
+  HttpsURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -860,8 +860,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - ':8243'
-    Description: ESB HTTPS Gateway endpoint
-  KibanaUrl:
+    Description: WSO2 Identity Server HTTPS Gateway endpoint
+  LogDashboardURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -869,7 +869,7 @@ Outputs:
           - WSO2LoggingInstance
           - PublicDnsName
         - ':5601'
-    Description: Kibana Dashboard URL
+    Description: Log Dashboard URL (Kibana Dashboard)
 Parameters:
   AWSAccessKeyId:
     Type: String

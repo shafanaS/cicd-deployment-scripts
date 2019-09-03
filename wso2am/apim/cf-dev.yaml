@@ -872,7 +872,7 @@ Resources:
       - WSO2VPCInternetGatewayAttachment
       - WSO2DBInstance
 Outputs:
-  MgtConsoleUrl:
+  MgtConsoleURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -880,8 +880,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - '/carbon'
-    Description: APIM Management Console URL
-  PublisherUrl:
+    Description: WSO2 API Manager Management Console URL
+  PublisherURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -889,8 +889,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - '/publisher'
-    Description: APIM service publisher URL
-  StoreUrl:
+    Description: WSO2 APIM Publisher URL for API development and management
+  StoreURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -898,8 +898,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - '/store'
-    Description: APIM service store URL
-  AdminUrl:
+    Description: WS02 APIM Store Web application URL (Developer Store)
+  AdminURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -907,8 +907,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - '/admin'
-    Description: APIM service admin URL
-  HttpsUrl:
+    Description: WSO2 APIM Admin service URL
+  HttpsURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -916,8 +916,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - ':8243'
-    Description: APIM HTTPS Gateway endpoint
-  HttpUrl:
+    Description: WSO2 APIM HTTPS Gateway endpoint
+  HttpURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -926,7 +926,7 @@ Outputs:
           - DNSName
         - ':8280'
     Description: APIM HTTP Gateway endpoint
-  KibanaUrl:
+  LogDashboardURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -934,7 +934,7 @@ Outputs:
           - LoggingInstanceDev
           - PublicDnsName
         - ':5601'
-    Description: Kibana Dashboard URL
+    Description: Log Dashboard URL (Kibana Dashboard)
 Parameters:
   AWSAccessKeyId:
     Type: String
