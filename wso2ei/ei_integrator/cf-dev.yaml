@@ -183,8 +183,9 @@ Resources:
       BackupRetentionPeriod: '0'
       DBInstanceIdentifier: !Join
         - '-'
-        - - 'WSO2DBInstance'
+        - - 'WSO2EIDB'
           - !Ref Environment
+          - 'Instance'
       DBName: WSO2_DB
       Engine: !Ref DBType
       MasterUsername: !Ref DBUsername
@@ -293,8 +294,9 @@ Resources:
         - Key: Name
           Value: !Join
             - ''
-            - - 'WSO2BastionInstance'
+            - - 'WSO2Bastion'
               - !Ref Environment
+              - 'Instance'
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress : 'true'
@@ -382,7 +384,8 @@ Resources:
           chmod +x /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz -C /home/wso2user
           unzip /home/wso2user/${Product}-${Version}.zip -d /home/wso2user/
-          cp /home/wso2user/endpointCars/*_staging*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
+          cp /home/wso2user/endpointCars/*_common*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
+          cp /home/wso2user/endpointCars/*_dev*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/ALB_DNS_NAME/${WSO2LoadBalancer.DNSName}/g" /home/wso2user/${Product}-${Version}/conf/carbon.xml
@@ -431,8 +434,9 @@ Resources:
         - Key: Name
           Value: !Join
             - ''
-            - - 'WSO2Instance1'
+            - - 'WSO2EI'
               - !Ref Environment
+              - 'Instance01'
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: !Join
@@ -495,7 +499,8 @@ Resources:
           chmod +x /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz -C /home/wso2user
           unzip /home/wso2user/${Product}-${Version}.zip -d /home/wso2user/
-          cp /home/wso2user/endpointCars/*_staging*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
+          cp /home/wso2user/endpointCars/*_common*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
+          cp /home/wso2user/endpointCars/*_dev*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/ALB_DNS_NAME/${WSO2LoadBalancer.DNSName}/g" /home/wso2user/${Product}-${Version}/conf/carbon.xml
@@ -544,8 +549,9 @@ Resources:
         - Key: Name
           Value: !Join
             - ''
-            - - 'WSO2Instance2'
+            - - 'WSO2EI'
               - !Ref Environment
+              - 'Instance02'
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: !Join
@@ -807,8 +813,9 @@ Resources:
         - Key: Name
           Value: !Join
             - ''
-            - - 'WSO2LoggingInstance'
+            - - 'WSO2Logging'
               - !Ref Environment
+              - 'Instance'
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress: 'true'
@@ -832,7 +839,7 @@ Resources:
       - WSO2VPCInternetGatewayAttachment
       - WSO2DBInstance
 Outputs:
-  MgtConsoleUrl:
+  ConsoleURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -840,8 +847,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - '/carbon'
-    Description: Management Console URL
-  HttpUrl:
+    Description: WSO2 Enterprise Integrator Management Console URL
+  HttpURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -849,8 +856,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - ':8280'
-    Description: ESB HTTP Gateway endpoint
-  HttpsUrl:
+    Description: WSO2 Enterprise Integrator HTTP Gateway endpoint
+  HttpsURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -858,8 +865,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - ':8243'
-    Description: ESB HTTPS Gateway endpoint
-  KibanaUrl:
+    Description: WSO2 Enterprise Integrator HTTPS Gateway endpoint
+  LogDashboardURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -867,7 +874,7 @@ Outputs:
           - WSO2LoggingInstance
           - PublicDnsName
         - ':5601'
-    Description: Kibana Dashboard URL
+    Description: Log Dashboard URL (Kibana Dashboard)
 Parameters:
   AWSAccessKeyId:
     Type: String

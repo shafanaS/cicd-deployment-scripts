@@ -190,7 +190,7 @@ Resources:
       DBInstanceClass: db.t2.medium
       AllocatedStorage: 5
       BackupRetentionPeriod: '0'
-      DBInstanceIdentifier: WSO2APIMDBSTAGINGInstance
+      DBInstanceIdentifier: WSO2APIMDBStagingInstance
       DBName: WSO2_AM_DB
       Engine: !Ref DBType
       MasterUsername: !Ref DBUsername
@@ -321,7 +321,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2BastionInstanceStaging
+          Value: WSO2BastionStagingInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress : 'true'
@@ -409,10 +409,10 @@ Resources:
           chmod +x /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz -C /home/wso2user
           unzip /home/wso2user/${Product}-${Version}.zip -d /home/wso2user/
-          cp /home/wso2user/endpointCars/*_staging*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/ALB_DNS_NAME/${WSO2APIMLoadBalancer.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/carbon.xml
+          sed -i "s/ALB_DNS_NAME/${WSO2LoadBalancer.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/api-manager.xml
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s/RDS_DNS_NAME/${WSO2APIMDBSTAGINGInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
@@ -472,7 +472,7 @@ Resources:
         - !Ref WSO2APIMPrivateSubnet1
       Tags:
         - Key: Name
-          Value: WSO2APIMInstance1Staging
+          Value: WSO2APIMStagingInstance01
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: apim
@@ -533,10 +533,10 @@ Resources:
           chmod +x /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz -C /home/wso2user
           unzip /home/wso2user/${Product}-${Version}.zip -d /home/wso2user/
-          cp /home/wso2user/endpointCars/*_staging*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/ALB_DNS_NAME/${WSO2APIMLoadBalancer.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/carbon.xml
+          sed -i "s/ALB_DNS_NAME/${WSO2LoadBalancer.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/api-manager.xml
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s/RDS_DNS_NAME/${WSO2APIMDBSTAGINGInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
@@ -596,7 +596,7 @@ Resources:
         - !Ref WSO2APIMPrivateSubnet2
       Tags:
         - Key: Name
-          Value: WSO2APIMInstance2Staging
+          Value: WSO2APIMStagingInstance02
           PropagateAtLaunch: 'true'
     CreationPolicy:
       ResourceSignal:
@@ -807,7 +807,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2LoggingInstanceStaging
+          Value: WSO2LoggingStagingInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress: 'true'
@@ -839,8 +839,8 @@ Outputs:
           - WSO2APIMLoadBalancer
           - DNSName
         - '/carbon'
-    Description: APIM Management Console URL
-  PublisherUrl:
+    Description: WSO2 API Manager Management Console URL
+  PublisherURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -848,8 +848,8 @@ Outputs:
           - WSO2APIMLoadBalancer
           - DNSName
         - '/publisher'
-    Description: APIM service publisher URL
-  StoreUrl:
+    Description: WSO2 APIM Publisher URL for API development and management
+  StoreURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -857,8 +857,8 @@ Outputs:
           - WSO2APIMLoadBalancer
           - DNSName
         - '/store'
-    Description: APIM service store URL
-  AdminUrl:
+    Description: WS02 APIM Store Web application URL (Developer Store)
+  AdminURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -866,8 +866,8 @@ Outputs:
           - WSO2APIMLoadBalancer
           - DNSName
         - '/admin'
-    Description: APIM service admin URL
-  HttpsUrl:
+    Description: WSO2 APIM Admin service URL
+  HttpsURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -875,8 +875,8 @@ Outputs:
           - WSO2APIMLoadBalancer
           - DNSName
         - ':8243'
-    Description: APIM HTTPS Gateway endpoint
-  HttpUrl:
+    Description: WSO2 APIM HTTPS Gateway endpoint
+  HttpURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -885,7 +885,7 @@ Outputs:
           - DNSName
         - ':8280'
     Description: APIM HTTP Gateway endpoint
-  KibanaUrl:
+  LogDashboardURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -893,7 +893,7 @@ Outputs:
           - LoggingInstance
           - PublicDnsName
         - ':5601'
-    Description: Kibana Dashboard URL
+    Description: Log Dashboard URL (Kibana Dashboard)
 Parameters:
   AWSAccessKeyId:
     Type: String

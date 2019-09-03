@@ -218,7 +218,7 @@ Resources:
       DBInstanceClass: db.t2.medium
       AllocatedStorage: 5
       BackupRetentionPeriod: '0'
-      DBInstanceIdentifier: WSO2EIDBInstance
+      DBInstanceIdentifier: WSO2EIDBProdInstance
       DBName: WSO2_EI_DB
       Engine: !Ref DBType
       MasterUsername: !Ref DBUsername
@@ -352,7 +352,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2BastionInstanceProd
+          Value: WSO2BastionProdInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress : 'true'
@@ -441,6 +441,7 @@ Resources:
           chmod +x /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz -C /home/wso2user
           unzip /home/wso2user/${Product}-${Version}.zip -d /home/wso2user/
+          cp /home/wso2user/endpointCars/*_common*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           cp /home/wso2user/endpointCars/*_production*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
@@ -488,7 +489,7 @@ Resources:
         - !Ref WSO2EIPrivateSubnet1
       Tags:
         - Key: Name
-          Value: WSO2EIInstance1Prod
+          Value: WSO2EIProdInstance01
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: ei
@@ -556,6 +557,7 @@ Resources:
           chmod +x /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz
           tar -xvf /home/wso2user/tailon_1.0.0_linux_amd64.tar.gz -C /home/wso2user
           unzip /home/wso2user/${Product}-${Version}.zip -d /home/wso2user/
+          cp /home/wso2user/endpointCars/*_common*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           cp /home/wso2user/endpointCars/*_production*.car /home/wso2user/${Product}-${Version}/repository/deployment/server/carbonapps
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/conf/axis2/axis2.xml
@@ -603,7 +605,7 @@ Resources:
         - !Ref WSO2EIPrivateSubnet2
       Tags:
         - Key: Name
-          Value: WSO2EIInstance2Prod
+          Value: WSO2EIProdInstance02
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: ei
@@ -847,7 +849,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2MonitoringInstanceProd
+          Value: WSO2MonitoringProdInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress: 'true'
@@ -891,7 +893,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2LoggingInstanceProd
+          Value: WSO2LoggingProdInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress: 'true'
@@ -915,7 +917,7 @@ Resources:
       - WSO2EIVPCInternetGatewayAttachment
       - WSO2EIDBInstance
 Outputs:
-  MgtConsoleUrl:
+  ConsoleURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -923,8 +925,8 @@ Outputs:
           - WSO2EILoadBalancerProd
           - DNSName
         - '/carbon'
-    Description: Enterprise Integrator Management Console URL
-  HttpUrl:
+    Description: WSO2 Enterprise Integrator Management Console URL
+  HttpURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -932,8 +934,8 @@ Outputs:
           - WSO2EILoadBalancerProd
           - DNSName
         - ':8280'
-    Description: EI HTTP Gateway endpoint
-  HttpsUrl:
+    Description: WSO2 Enterprise Integrator HTTP Gateway endpoint
+  HttpsURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -941,8 +943,8 @@ Outputs:
           - WSO2EILoadBalancerProd
           - DNSName
         - ':8243'
-    Description: EI HTTPS Gateway endpoint
-  MonitoringUrl:
+    Description: WSO2 Enterprise Integrator HTTPS Gateway endpoint
+  MonitoringDashboardURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -950,8 +952,8 @@ Outputs:
           - MonitoringInstanceProd
           - PublicDnsName
         - ':3000/d/dxHncuHS/'
-    Description: Grafana Dashboard URL
-  KibanaUrl:
+    Description: Monitoring Dashboard URL (Grafana Dashboard)
+  LogDashboardURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -959,7 +961,7 @@ Outputs:
           - LoggingInstanceProd
           - PublicDnsName
         - ':5601'
-    Description: Kibana Dashboard URL
+    Description: Log Dashboard URL (Kibana Dashboard)
 Parameters:
   AWSAccessKeyId:
     Type: String

@@ -183,8 +183,9 @@ Resources:
       BackupRetentionPeriod: '0'
       DBInstanceIdentifier: !Join
         - ''
-        - - 'WSO2DBInstance'
+        - - 'WSO2APIMDB'
           - !Ref Environment
+          - 'Instance'
       DBName: WSO2_DB
       Engine: !Ref DBType
       MasterUsername: !Ref DBUsername
@@ -318,8 +319,9 @@ Resources:
         - Key: Name
           Value: !Join
             - ''
-            - - 'WSO2BastionInstance'
+            - - 'WSO2Bastion'
               - !Ref Environment
+              - 'Instance'
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress : 'true'
@@ -410,6 +412,7 @@ Resources:
           sed -i "s/ACCESS_KEY/${AWSAccessKeyId}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/REGION_NAME/${AWS::Region}/g" /home/wso2user/${Product}-${Version}/repository/conf/axis2/axis2.xml
           sed -i "s/ALB_DNS_NAME/${WSO2LoadBalancer.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/carbon.xml
+          sed -i "s/ALB_DNS_NAME/${WSO2LoadBalancer.DNSName}/g" /home/wso2user/${Product}-${Version}/repository/conf/api-manager.xml
           sed -i "s/CF_DB_USERNAME/${DBUsername}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s/CF_DB_PASSWORD/${DBPassword}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
           sed -i "s/RDS_DNS_NAME/${WSO2DBInstance.Endpoint.Address}/g" /home/wso2user/${Product}-${Version}/repository/conf/datasources/master-datasources.xml
@@ -471,8 +474,9 @@ Resources:
         - Key: Name
           Value: !Join
             - ''
-            - - 'WSO2Instance1'
+            - - 'WSO2APIM'
               - !Ref Environment
+              - 'Instance01'
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: !Join
@@ -599,8 +603,9 @@ Resources:
         - Key: Name
           Value: !Join
             - ''
-            - - 'WSO2Instance2'
+            - - 'WSO2APIM'
               - !Ref Environment
+              - 'Instance02'
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: !Join
@@ -841,8 +846,9 @@ Resources:
         - Key: Name
           Value: !Join
             - ''
-            - - 'WSO2LoggingInstance'
+            - - 'WSO2Logging'
               - !Ref Environment
+              - 'Instance'
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress: 'true'
@@ -866,7 +872,7 @@ Resources:
       - WSO2VPCInternetGatewayAttachment
       - WSO2DBInstance
 Outputs:
-  MgtConsoleUrl:
+  MgtConsoleURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -874,8 +880,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - '/carbon'
-    Description: APIM Management Console URL
-  PublisherUrl:
+    Description: WSO2 API Manager Management Console URL
+  PublisherURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -883,8 +889,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - '/publisher'
-    Description: APIM service publisher URL
-  StoreUrl:
+    Description: WSO2 APIM Publisher URL for API development and management
+  StoreURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -892,8 +898,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - '/store'
-    Description: APIM service store URL
-  AdminUrl:
+    Description: WS02 APIM Store Web application URL (Developer Store)
+  AdminURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -901,8 +907,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - '/admin'
-    Description: APIM service admin URL
-  HttpsUrl:
+    Description: WSO2 APIM Admin service URL
+  HttpsURL:
     Value: !Join
       - ''
       - - 'https://'
@@ -910,8 +916,8 @@ Outputs:
           - WSO2LoadBalancer
           - DNSName
         - ':8243'
-    Description: APIM HTTPS Gateway endpoint
-  HttpUrl:
+    Description: WSO2 APIM HTTPS Gateway endpoint
+  HttpURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -920,7 +926,7 @@ Outputs:
           - DNSName
         - ':8280'
     Description: APIM HTTP Gateway endpoint
-  KibanaUrl:
+  LogDashboardURL:
     Value: !Join
       - ''
       - - 'http://'
@@ -928,7 +934,7 @@ Outputs:
           - LoggingInstanceDev
           - PublicDnsName
         - ':5601'
-    Description: Kibana Dashboard URL
+    Description: Log Dashboard URL (Kibana Dashboard)
 Parameters:
   AWSAccessKeyId:
     Type: String

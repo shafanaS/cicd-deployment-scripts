@@ -183,8 +183,9 @@ Resources:
       BackupRetentionPeriod: '0'
       DBInstanceIdentifier: !Join
                           - '-'
-                          - - 'WSO2DBInstance'
+                          - - 'WSO2DB'
                             - !Ref Environment
+                            - 'Instance'
       DBName: WSO2_DB
       Engine: !Ref DBType
       MasterUsername: !Ref DBUsername
@@ -293,8 +294,9 @@ Resources:
         - Key: Name
           Value: !Join
             - '-'
-            - - 'WSO2BastionInstance'
+            - - 'WSO2Bastion'
               - !Ref Environment
+              - 'Instance'
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress : 'true'
@@ -432,8 +434,9 @@ Resources:
         - Key: Name
           Value: !Join
             - '-'
-            - - 'WSO2Instance1'
+            - - 'WSO2'
               - !Ref Environment
+              - 'Instance01'
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: !Join
@@ -546,8 +549,9 @@ Resources:
         - Key: Name
           Value: !Join
             - '-'
-            - - 'WSO2Instance2'
+            - - 'WSO2'
               - !Ref Environment
+              - 'Instance2'
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: !Join
@@ -808,8 +812,9 @@ Resources:
         - Key: Name
           Value: !Join
             - '-'
-            - - 'WSO2LoggingInstance'
+            - - 'WSO2Logging'
               - !Ref Environment
+              - 'Instance'
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress: 'true'
