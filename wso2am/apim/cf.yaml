@@ -198,7 +198,7 @@ Resources:
     Type: 'AWS::EC2::EIPAssociation'
     Properties:
       AllocationId: !GetAtt WSO2BastionEIP.AllocationId
-      InstanceId: !Ref WSO2BastionProdInstance
+      InstanceId: !Ref WSO2BastionInstanceProd
   WSO2APIMEIP:
     Type: 'AWS::EC2::EIP'
     Properties:
@@ -385,7 +385,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2BastionInstanceProd
+          Value: WSO2BastionProdInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress : 'true'
