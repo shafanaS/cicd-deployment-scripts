@@ -317,7 +317,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join
-            - '-'
+            - ''
             - - 'WSO2BastionInstance'
               - !Ref Environment
       NetworkInterfaces:
@@ -840,8 +840,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join
-            - '-'
-            - - 'WSO2LoggingInstanceDev'
+            - ''
+            - - 'WSO2LoggingInstance'
               - !Ref Environment
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
