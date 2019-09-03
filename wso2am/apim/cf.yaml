@@ -227,7 +227,7 @@ Resources:
       DBInstanceClass: db.t2.medium
       AllocatedStorage: 5
       BackupRetentionPeriod: '0'
-      DBInstanceIdentifier: WSO2APIMDBInstance
+      DBInstanceIdentifier: WSO2APIMDBProdInstance
       DBName: WSO2_AM_DB
       Engine: !Ref DBType
       MasterUsername: !Ref DBUsername

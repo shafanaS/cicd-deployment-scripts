@@ -181,7 +181,7 @@ Resources:
       DBInstanceClass: db.t2.medium
       AllocatedStorage: 5
       BackupRetentionPeriod: '0'
-      DBInstanceIdentifier: WSO2ISDBSTAGINGInstance
+      DBInstanceIdentifier: WSO2ISDBStagingInstance
       DBName: WSO2_IS_DB
       Engine: !Ref DBType
       MasterUsername: !Ref DBUsername

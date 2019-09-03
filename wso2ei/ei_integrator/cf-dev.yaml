@@ -183,8 +183,9 @@ Resources:
       BackupRetentionPeriod: '0'
       DBInstanceIdentifier: !Join
         - '-'
-        - - 'WSO2DBInstance'
+        - - 'WSO2EIDB'
           - !Ref Environment
+          - 'Instance'
       DBName: WSO2_DB
       Engine: !Ref DBType
       MasterUsername: !Ref DBUsername

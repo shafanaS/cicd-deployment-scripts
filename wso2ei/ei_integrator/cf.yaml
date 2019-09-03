@@ -218,7 +218,7 @@ Resources:
       DBInstanceClass: db.t2.medium
       AllocatedStorage: 5
       BackupRetentionPeriod: '0'
-      DBInstanceIdentifier: WSO2EIDBInstance
+      DBInstanceIdentifier: WSO2EIDBProdInstance
       DBName: WSO2_EI_DB
       Engine: !Ref DBType
       MasterUsername: !Ref DBUsername
