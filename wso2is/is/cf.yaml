@@ -352,7 +352,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2BastionInstanceProd
+          Value: WSO2BastionProdInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress : 'true'
@@ -487,7 +487,7 @@ Resources:
         - !Ref WSO2ISPrivateSubnet1
       Tags:
         - Key: Name
-          Value: WSO2ISInstance1Prod
+          Value: WSO2ISProdInstance01
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: is
@@ -601,7 +601,7 @@ Resources:
         - !Ref WSO2ISPrivateSubnet2
       Tags:
         - Key: Name
-          Value: WSO2ISInstance2Prod
+          Value: WSO2ISProdInstance02
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: is
@@ -844,7 +844,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2MonitoringInstanceProd
+          Value: WSO2MonitoringProdInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress: 'true'
@@ -888,7 +888,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2LoggingInstanceProd
+          Value: WSO2LoggingProdInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress: 'true'

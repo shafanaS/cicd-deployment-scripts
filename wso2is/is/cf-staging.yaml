@@ -288,7 +288,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2BastionInstanceStaging
+          Value: WSO2BastionStagingInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress : 'true'
@@ -422,7 +422,7 @@ Resources:
         - !Ref WSO2ISPrivateSubnet1
       Tags:
         - Key: Name
-          Value: WSO2ISInstance1Staging
+          Value: WSO2ISStagingInstance01
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: is
@@ -529,7 +529,7 @@ Resources:
         - !Ref WSO2ISPrivateSubnet2
       Tags:
         - Key: Name
-          Value: WSO2ISInstance2Staging
+          Value: WSO2ISStagingInstance02
           PropagateAtLaunch: 'true'
         - Key: cluster
           Value: is
@@ -765,7 +765,7 @@ Resources:
       Monitoring: 'false'
       Tags:
         - Key: Name
-          Value: WSO2LoggingInstanceStaging
+          Value: WSO2LoggingStagingInstance
       NetworkInterfaces:
         - DeleteOnTermination: 'true'
           AssociatePublicIpAddress: 'true'
